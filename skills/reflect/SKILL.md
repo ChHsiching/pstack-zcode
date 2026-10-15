@@ -24,19 +24,19 @@ That covers the legacy flat (`<id>.jsonl`), current nested (`<id>/<id>.jsonl`), 
 
 One message, three subagent spawns, full tool access. Reviewers need MCP access to look up the tickets, chat threads, and observability traces the transcript references, and read-only strips MCPs.
 
-Each reviewer and the synthesizer name a role line in the `pstack-models.mdc` rule and a default. Set `model` to that line's value, or to the default if the rule or the line is missing. Leave `model` unset when the value is `auto` or `inherit-parent`. If a spawn rejects a slug, use the default and say so. If it rejects the default, use the closest valid slug of the same family from its error message. Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section of the **pstack-poteto-mode** skill.
+Each reviewer and the synthesizer name a role line in `~/.zcode/pstack/models.md`. A line pinning a model runs on its preset subagent, `pstack-<role>` (written by `/pstack-setup-pstack`); spawn the preset by name. An `inherit-parent` or missing line leaves the model unset, so the subagent follows the session model. If a spawn rejects a pinned model, leave the model unset and say so.
 
 | Lens | Role line | Default `model` | Prompt template |
 |---|---|---|---|
-| Judgment | `reflect judgment, divergent, synthesizer` | `claude-opus-5-5-xhigh` | `references/judgment-reviewer.md` |
-| Tooling | `reflect tooling` | `grok-4.7-xhigh-fast` | `references/tooling-reviewer.md` |
-| Divergent | `reflect judgment, divergent, synthesizer` | `claude-opus-5-5-xhigh` | `references/divergent-reviewer.md` |
+| Judgment | `reflect judgment, divergent, synthesizer` | `inherit-parent` | `references/judgment-reviewer.md` |
+| Tooling | `reflect tooling` | `inherit-parent` | `references/tooling-reviewer.md` |
+| Divergent | `reflect judgment, divergent, synthesizer` | `inherit-parent` | `references/divergent-reviewer.md` |
 
 Pass each template verbatim, substituting the transcript path or digest where marked. Reviewers return findings in their response body.
 
 ## 3. Synthesize
 
-One subagent spawn, `model` from the `reflect judgment, divergent, synthesizer` line (default `claude-opus-5-5-xhigh`), full tool access. It spot-verifies citations through MCP, and read-only strips MCPs. Pass `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. It returns an Accepted / Rejected / Backlog list.
+One subagent spawn, `model` from the `reflect judgment, divergent, synthesizer` line (default `inherit-parent`), full tool access. It spot-verifies citations through MCP, and read-only strips MCPs. Pass `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. It returns an Accepted / Rejected / Backlog list.
 
 ## 4. Structural enforcement check
 

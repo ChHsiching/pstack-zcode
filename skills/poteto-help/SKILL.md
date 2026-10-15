@@ -24,23 +24,23 @@ Infer the need from the message and the conversation. A named situation, such as
 
 Check the state that changes the answer, and mention it only when it does:
 
-- No `~/.cursor/rules/pstack-models.mdc` means `/pstack-setup-pstack` hasn't run for this user, so every role uses its default model.
+- No `~/.zcode/pstack/models.md` means `/pstack-setup-pstack` hasn't run for this user, so every role runs on the session model.
 - No `verify-*` skill or other app harness in the project means agents have no scripted way to drive the app. Mention `/pstack-create-verification-skill` when the question is about proving a change works.
 
-When the model rule is missing and it matters, ask whether the user wants to pick a model for each role and a reasoning budget now. It matters when the user is new, the question is about setup or cost, or the answer depends on which models run. Ask at most once per chat. If the need is also unclear, ask both questions together. Offer two choices:
+When the models file is missing and it matters, ask whether the user wants to pick a model for each role and a reasoning budget now. It matters when the user is new, the question is about setup or cost, or the answer depends on which models run. Ask at most once per chat. If the need is also unclear, ask both questions together. Offer two choices:
 
 - Now: give them `/pstack-setup-pstack` to type, and answer their question too.
-- Later: answer their question, and add one line saying every role keeps its default model until they run `/pstack-setup-pstack`.
+- Later: answer their question, and add one line saying every role runs on the session model until they run `/pstack-setup-pstack`.
 
 ## Get set up
 
 1. Install with `npx skills add ChHsiching/pstack-zcode`.
-2. Run [`/pstack-setup-pstack`](../setup-pstack/SKILL.md). It asks for a reasoning budget, maps a model to each role, and writes a rule. The rule applies to new chats.
+2. Run [`/pstack-setup-pstack`](../setup-pstack/SKILL.md). It asks for a reasoning budget, maps a model to each role, and writes a data file that skills read at spawn time. Preset agents it writes apply to new chats.
 3. Start a real task with `/pstack-poteto-mode`, a goal, and a check that can pass or fail.
 
 Installing changes nothing until the user invokes a skill. Only `/pstack-setup-pstack` loads from the user's words. The [README](../../README.md) and [guide page 1](../../docs/guide/01-setup.md) have the details. Offer to word their first prompt with them, per [`references/prompting.md`](references/prompting.md).
 
-If cost is the worry, say where the tokens go and how to spend fewer. pstack spends extra tokens on subagents and review panels. Rerun `/pstack-setup-pstack` and pick a smaller budget or cheaper models. A role set to `auto` or `inherit-parent` runs on the chat's model, which saves tokens when the chat runs on Auto or a cheaper model. A shorter panel list runs fewer subagents, one for each entry. Save `/pstack-poteto-mode` for work that needs rigor.
+If cost is the worry, say where the tokens go and how to spend fewer. pstack spends extra tokens on subagents and review panels. Rerun `/pstack-setup-pstack` and pick a smaller budget or cheaper models. A role left at `inherit-parent` runs on the session model, which saves tokens when the session runs on a cheaper model. A shorter panel list runs fewer subagents, one for each entry. Save `/pstack-poteto-mode` for work that needs rigor.
 
 ## Start a task with `/pstack-poteto-mode`
 
@@ -129,7 +129,7 @@ Principles are one-rule skills that `/pstack-poteto-mode` reads and cites in its
 |---|---|
 | The mode stopped applying after a few turns | It fades as the chat moves on. Start each task with `/pstack-poteto-mode`. |
 | A question got treated as the next step of the last task | Say "new task", or say the turn doesn't need the mode. |
-| A new model choice had no effect | The rule from `/pstack-setup-pstack` applies to new chats. Start one. |
+| A new model choice had no effect | The preset agents from `/pstack-setup-pstack` apply to new chats. Start one. |
 | Runs cost more than expected | See the cost paragraph under Get set up. |
 | A skill didn't load on its own | Only `/pstack-setup-pstack` loads from the user's words. The others load when the user types them or when `/pstack-poteto-mode` runs them, and it doesn't run every skill. |
 | Parallel agents overwrote each other | Give each agent its own worktree. |

@@ -40,6 +40,14 @@ _Avoid_: persona, profile
 The alias meaning "omit the model field so the subagent follows the session model".
 _Avoid_: auto
 
+**models file**:
+`~/.zcode/pstack/models.md`, the per-user role-to-model table written by `/pstack-setup-pstack` and read by skills at spawn time; absent means every role runs on the session model.
+_Avoid_: models rule, `.mdc` rule
+
+**preset**:
+An agent file (`~/.zcode/agents/pstack-<role>.md`) written by `/pstack-setup-pstack` only for a role pinned to a model; it carries that model and reasoning level so a plain subagent spawn can run the role on it.
+_Avoid_: role agent
+
 **poteto-agent**:
 The delegate-wrapper subagent that runs playbooks; it never pins a model — the spawning role decides.
 _Avoid_: helper agent
