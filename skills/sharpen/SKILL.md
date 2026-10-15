@@ -1,6 +1,6 @@
 ---
-name: sharpen
-description: "Sharpen a task before starting: the expert approach, what the user is really after, and the right level of specification. Use for /sharpen."
+name: pstack-sharpen
+description: "Sharpen a task before starting: the expert approach, what the user is really after, and the right level of specification. Use for /pstack-sharpen."
 disable-model-invocation: true
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: principle-test-behavior-not-implementation
+name: pstack-principle-test-behavior-not-implementation
 description: "Apply when you write, change, or keep a test. Call the code as its users do and assert the exact result they see. Rewrite or delete a test that would pass if every imported function returned undefined."
 disable-model-invocation: true
 ---
