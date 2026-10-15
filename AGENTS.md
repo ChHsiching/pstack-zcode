@@ -1,6 +1,6 @@
 # pstack-zcode
 
-pstack (Lauren @poteto's Cursor coding workflow) adapted for ZCode. Tracks `cursor/plugins` (`pstack/`) as upstream.
+pstack (Lauren @poteto's Cursor coding workflow) adapted for ZCode. The repo root is pstack's tree; upstream (`cursor/plugins`, pstack subtree only) syncs via `scripts/sync-upstream.sh` (git subtree). Adaptation rules: `docs/adr/`; vocabulary: `GLOSSARY.md`.
 
 ## Agent skills
 
