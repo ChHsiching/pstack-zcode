@@ -1,5 +1,7 @@
 # pstack-zcode
 
+[![Cursor residue lint](https://github.com/ChHsiching/pstack-zcode/actions/workflows/cursor-residue.yml/badge.svg)](https://github.com/ChHsiching/pstack-zcode/actions/workflows/cursor-residue.yml)
+
 pstack-zcode is [pstack](https://x.com/poteto), Lauren @poteto's coding workflow for shipping high quality code with agents, adapted for ZCode. same workflow, different editor: every change to the upstream tree swaps a Cursor mechanism for its ZCode equivalent, skill bodies keep upstream's wording, and upstream changes merge in through `scripts/sync-upstream.sh`.
 
 there's a growing sense that ai writes too much slop code. throughput without quality is not a goal. if you want to go fast, go deep first. pstack helps you write less, but higher quality code. it turns ZCode into a real engineering team.
