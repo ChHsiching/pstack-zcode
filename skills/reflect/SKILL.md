@@ -1,6 +1,6 @@
 ---
 name: pstack-reflect
-description: Spawn three parallel review subagents over the active transcript, surface learnings, and route each to a concrete edit on an existing skill. Use when the user says reflect.
+description: Spawn three parallel review subagents over the session material, surface learnings, and route each to a concrete edit on an existing skill. Use when the user says reflect.
 disable-model-invocation: true
 ---
 
@@ -10,19 +10,13 @@ Mine the current conversation for durable learnings, then route them into skill 
 
 Invoke when the user says "reflect" or "/pstack-reflect". Skip when the conversation is trivial, off-topic, or already covered by an existing skill the parent followed correctly. One-offs are not learnings.
 
-## 1. Locate the active transcript
+## 1. Assemble the session material
 
-Before fanning out, find this conversation's transcript in the `agent-transcripts/` directory the system prompt names. Do not glob across `~/.cursor/projects/*/`. That crosses workspace boundaries and reads private chats from unrelated projects.
-
-```bash
-ls -t <agent-transcripts>/*.jsonl <agent-transcripts>/*/*.jsonl <agent-transcripts>/*/subagents/*.jsonl 2>/dev/null | head -10
-```
-
-That covers the legacy flat (`<id>.jsonl`), current nested (`<id>/<id>.jsonl`), and subagent (`<parent>/subagents/<child>.jsonl`) layouts. For each candidate, read the first JSONL line. Take the file whose `message.content[0].text` contains the conversation's opening user prompt. If none matches, pass a tight digest of the session instead.
+Before fanning out, reduce this conversation — user prompts, decisions, corrections, and the tool calls that shaped the work — to a tight digest. You hold the conversation; subagents cannot read session history, so the digest you pass is all they see.
 
 ## 2. Spawn three reviewers in parallel
 
-One message, three subagent spawns, full tool access. Reviewers need MCP access to look up the tickets, chat threads, and observability traces the transcript references, and read-only strips MCPs.
+One message, three subagent spawns, full tool access. Reviewers need MCP access to look up the tickets, chat threads, and observability traces the session material references, and read-only strips MCPs.
 
 Each reviewer and the synthesizer name a role line in `~/.zcode/pstack/models.md`. A line pinning a model runs on its preset subagent, `pstack-<role>` (written by `/pstack-setup-pstack`); spawn the preset by name. An `inherit-parent` or missing line leaves the model unset, so the subagent follows the session model. If a spawn rejects a pinned model, leave the model unset and say so.
 
@@ -32,7 +26,7 @@ Each reviewer and the synthesizer name a role line in `~/.zcode/pstack/models.md
 | Tooling | `reflect tooling` | `inherit-parent` | `references/tooling-reviewer.md` |
 | Divergent | `reflect judgment, divergent, synthesizer` | `inherit-parent` | `references/divergent-reviewer.md` |
 
-Pass each template verbatim, substituting the transcript path or digest where marked. Reviewers return findings in their response body.
+Pass each template verbatim, substituting the session digest where marked. Reviewers return findings in their response body.
 
 ## 3. Synthesize
 

@@ -1,6 +1,6 @@
 ---
 name: pstack-automate-me
-description: "Use for \"automate me\", \"create/update/refresh my -mode skill\", \"turn/capture my preferences or working style into a skill\", or wanting agents to follow how the user works. Drafts or revises a personal -mode skill with unslop, optionally pulling fresh evidence from recent transcripts."
+description: "Use for \"automate me\", \"create/update/refresh my -mode skill\", \"turn/capture my preferences or working style into a skill\", or wanting agents to follow how the user works. Drafts or revises a personal -mode skill with unslop, optionally pulling fresh evidence from recent sessions."
 disable-model-invocation: true
 ---
 
@@ -14,7 +14,7 @@ This skill orchestrates three others: an inline mining pass (see step 1), the **
 
 ### 0. Check for an existing skill
 
-Look recursively for `.cursor/skills/**/*-mode/SKILL.md` and `~/.cursor/skills/*-mode/SKILL.md` matching the user's handle. Mode skills can live in a personal category directory (`.cursor/skills/<handle>/`), not only at the top level. If one exists, confirm intent with `AskUserQuestion` (unless they already said "update my skill" or similar):
+Look recursively for `.zcode/skills/**/*-mode/SKILL.md` and `~/.zcode/skills/*-mode/SKILL.md` matching the user's handle. Mode skills can live in a personal category directory (`.zcode/skills/<handle>/`), not only at the top level. If one exists, confirm intent with `AskUserQuestion` (unless they already said "update my skill" or similar):
 
 - Update the existing skill (default for repeat runs)
 - Start fresh (rare, ask why before doing it)
@@ -26,9 +26,9 @@ Update mode changes the rest of the flow:
 
 ### 1. Mine their history
 
-Locate the active workspace's transcripts before fanning out. The system prompt names the workspace's `agent-transcripts/` directory. Use only that path. Don't glob across `~/.cursor/projects/*/`. That crosses workspace boundaries and reads private chats from unrelated projects.
+Collect the sessions to mine before fanning out. `ReadSessionContext` reaches one `sess_*` session id at a time, only from the main thread, and there is no session listing — the ids come from the user's references in the prompt and from asking. When no history is reachable, say so and let step 2's questions carry the flow.
 
-Survey recent agent conversations within that scope for recurring patterns. Run multiple parallel subagents across slices of history (e.g. last 2-4 weeks, split into 3 slices so each has enough material). Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section of the **pstack-poteto-mode** skill. Each slice mining subagent reads transcripts from the workspace-scoped path the parent provides, looks for the signals below, and returns a short structured list of patterns it saw with evidence pointers. Default signals worth hunting:
+Survey recent agent conversations within that scope for recurring patterns. Retrieve each session's material with `ReadSessionContext`, querying for working-style signals, then run multiple parallel subagents across batches of sessions (split into ~3 batches so each has enough material). Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section of the **pstack-poteto-mode** skill. Each mining subagent reads the session material the parent retrieved, looks for the signals below, and returns a short structured list of patterns it saw with evidence pointers. Default signals worth hunting:
 
 - Response preferences (length, tone, format, "dumb it down" corrections)
 - Delegation habits (subagents, models, specialized workflows, parallelism)
@@ -66,7 +66,7 @@ The **pstack-poteto-mode** skill shows the shape. Read it for granularity. Don't
 
 Author the skill per the **Authoring or modifying a skill** playbook (`../poteto-mode/playbooks/authoring-a-skill.md`). Placement:
 
-- Path: preserve an existing mode skill's category. For a new mode, use `.cursor/skills/<handle>/<handle>-mode/SKILL.md` when the repo has an established personal category for that handle. Otherwise default to `.cursor/skills/<handle>-mode/SKILL.md` in the project (or `~/.cursor/skills/<handle>-mode/` if the user prefers a personal skill).
+- Path: preserve an existing mode skill's category. For a new mode, use `.zcode/skills/<handle>/<handle>-mode/SKILL.md` when the repo has an established personal category for that handle. Otherwise default to `.zcode/skills/<handle>-mode/SKILL.md` in the project (or `~/.zcode/skills/<handle>-mode/` if the user prefers a personal skill).
 - Handle: the user's first name or chosen identifier.
 - Frontmatter `description`: trigger on their name + `/<handle>-mode` + "work in their style", not on generic keywords like "write code" or "review PR".
 - Frontmatter formatting: Keep `description` as one YAML scalar. Quote it or use `description: >-` with indented continuation lines when punctuation or wrapping requires it.

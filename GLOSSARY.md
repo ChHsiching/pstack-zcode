@@ -66,3 +66,7 @@ _Avoid_: pipeline, macro
 **automation**:
 ZCode's scheduled unattended prompt run (the CronCreate family); the adaptation target for benny's triggers.
 _Avoid_: routine, cron job
+
+**session context**:
+The material ZCode's `ReadSessionContext` tool returns for one `sess_*` session id — persisted conversation retrieved by query, never a file on disk. No session listing exists and only the main thread can call the tool; skills retrieve in the parent and hand subagents the material.
+_Avoid_: transcript, agent-transcripts
