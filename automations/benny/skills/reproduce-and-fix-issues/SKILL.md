@@ -18,7 +18,7 @@ Load the external Benny configuration supplied by the automation. If the config,
 - The coordinator is the only Slack poster.
 - Delegated analysis workers are read-only and return findings or media notes.
 - A fix-phase code worker may edit only when its environment provably excludes Slack credentials and every Slack write action. Otherwise the coordinator edits.
-- Every child prompt must explicitly forbid `SendSlackMessage`, `PostToSlack`, `chat.postMessage`, and all other Slack writes.
+- Every child prompt must explicitly forbid `chat.postMessage` and every other Slack write action of the configured Slack MCP server.
 - Never give a child a Slack token, posting instructions, source coordinates for posting, or permission to report externally.
 - If a child needs Slack write access to run, do not launch it.
 - Utility bots are evidence sources. They do not own the fix unless a person explicitly delegated the fix to them.
@@ -28,19 +28,20 @@ Load the external Benny configuration supplied by the automation. If the config,
 - Existing pull requests or commits switch the run to verify mode. Do not author over them.
 - Use `github.com` pull request links.
 - Keep captures, recordings, logs, and tokens out of source control.
-- Use pstack's `principle-guard-the-context-window` for delegated analysis.
-- Apply pstack's `principle-sequence-verifiable-units`, `principle-fix-root-causes`, and `principle-prove-it-works` through repro, fix, and verification.
+- Use pstack's `pstack-principle-guard-the-context-window` for delegated analysis.
+- Apply pstack's `pstack-principle-sequence-verifiable-units`, `pstack-principle-fix-root-causes`, and `pstack-principle-prove-it-works` through repro, fix, and verification.
 
 ## 1. Freeze source coordinates
 
 Before making a work list or delegating:
 
-1. Require the trigger channel to equal the configured source channel.
-2. Set `SOURCE_THREAD_TS` to `trigger.thread_ts` when present. Otherwise use `trigger.ts`.
-3. Require a nonempty `SOURCE_THREAD_TS`.
-4. Store `SOURCE_CHANNEL_ID` and `SOURCE_THREAD_TS` as immutable values.
-5. Read the source thread and verify its root has those exact coordinates.
-6. Fetch the source permalink.
+1. Scan the configured source Slack channel through the configured Slack MCP server for a top-level report whose thread holds a trusted triage marker and no repro outcome yet. That report is this run's trigger.
+2. Require the trigger channel to equal the configured source channel.
+3. Set `SOURCE_THREAD_TS` to `trigger.thread_ts` when present. Otherwise use `trigger.ts`.
+4. Require a nonempty `SOURCE_THREAD_TS`.
+5. Store `SOURCE_CHANNEL_ID` and `SOURCE_THREAD_TS` as immutable values.
+6. Read the source thread and verify its root has those exact coordinates.
+7. Fetch the source permalink.
 
 Never replace these values with a reply timestamp, operations timestamp, or status-message timestamp.
 
@@ -119,7 +120,7 @@ Use the configured plain Unicode status strings. Keep status text short:
 - Draft pull request opened
 - Fix did not land
 
-Prefer configured Cursor Slack actions. Use `BENNY_SLACK_BOT_TOKEN` only when the user configured it for a narrow missing capability such as editing this one status message. Never expose the token to a worker.
+Prefer the configured Slack MCP server. Use `BENNY_SLACK_BOT_TOKEN` only when the user configured it for a narrow missing capability such as editing this one status message. Never expose the token to a worker.
 
 If no operations channel is configured, keep detailed status in the automation run output. Do not substitute a source-channel root message.
 
@@ -158,7 +159,7 @@ Collect:
 
 Inspect screenshots and video. Use read-only parallel workers for code history, test ideas, blast-radius mapping, and media review when useful. Each worker gets a narrow question and the Slack-write prohibition.
 
-Use pstack's `how` skill to trace the action through the repository. Use `why` for regression history and defensive code. Form competing cause hypotheses and identify evidence that would separate them.
+Use pstack's `pstack-how` skill to trace the action through the repository. Use `pstack-why` for regression history and defensive code. Form competing cause hypotheses and identify evidence that would separate them.
 
 ## 7. Reproduce
 
@@ -211,7 +212,7 @@ For a confirmed repro, run the source preflight and post at most one unprompted 
 - Link the tracker issue when one exists.
 - Do not ping an owner by default.
 
-Attach evidence only when the configured Slack action keeps it inside the same source thread and the organization's retention policy allows it.
+Attach evidence only when the configured Slack MCP tool keeps it inside the same source thread and the organization's retention policy allows it.
 
 Wait for the configured rejection window. If a person shows that the setup or interpretation was wrong, correct the repro once. Do not start the fix phase until the window closes without a valid rejection.
 
@@ -259,7 +260,7 @@ Confirm the mechanism with runtime evidence. Eliminate competing hypotheses befo
 
 Fix the root cause with the smallest justified change.
 
-- Invoke pstack's `tdd` skill when there is a cheap local test target, and write the failing test before the fix.
+- Invoke pstack's `pstack-tdd` skill when there is a cheap local test target, and write the failing test before the fix.
 - State why TDD was skipped when the path is expensive, unclear, or integration-heavy.
 - Keep unrelated cleanup out.
 - Stop if the change grows beyond the configured effort or risk budget.
@@ -292,7 +293,7 @@ Only after before-and-after proof:
 - Link the configured tracker issue using the tracker's supported pull request syntax.
 - Use the configured public URL form, normally `https://github.com/{owner}/{repo}/pull/{number}`.
 - Include the repro steps, root cause, test result, before and after evidence, and blast-radius checks.
-- Run the pull request text and all Slack updates through pstack's `unslop` skill.
+- Run the pull request text and all Slack updates through pstack's `pstack-unslop` skill.
 
 If pull request creation fails, do not claim success. Keep the commit or branch state in the run output and mark operations status `Fix did not land`.
 

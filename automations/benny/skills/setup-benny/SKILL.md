@@ -6,19 +6,19 @@ disable-model-invocation: true
 
 # Set up Benny
 
-Benny ships as a dormant automation pack inside pstack. The plugin manifest exposes only pstack's normal skill root; this file and the two operational files are not slash skills.
+Benny ships as a dormant automation pack inside pstack. The skills collection exposes only pstack's normal skills root; this file and the two operational files are not slash skills.
 
-The human enters setup by pointing Cursor at the pack's `FOR_AGENTS.md`. The bootstrap flow copies the whole pack into the target repository, then reads this file directly at `.cursor/automations/benny/skills/setup-benny/SKILL.md`.
+The human enters setup by pointing ZCode at the pack's `FOR_AGENTS.md`. The bootstrap flow copies the whole pack into the target repository, then reads this file directly at `.zcode/automations/benny/skills/setup-benny/SKILL.md`.
 
-Benny needs external configuration and two live Cursor automations.
+Benny needs external configuration and two live ZCode automations.
 
-Do not create or update an automation until the user explicitly asks. Never put a secret value in plugin files, prompts, or committed configuration.
+Do not create or update an automation until the user explicitly asks. Never put a secret value in skill files, prompts, or committed configuration.
 
-## 1. Copy the pack and enable shared pstack skills
+## 1. Copy the pack and install the shared pstack skills
 
-Do this before asking for Benny configuration and before invoking the built-in `/automate` skill.
+Do this before asking for Benny configuration and before creating either automation.
 
-Ask which repository will run the automations. The source pack is the directory containing `FOR_AGENTS.md`. The destination is `<target-repository>/.cursor/automations/benny/`.
+Ask which repository will run the automations. The source pack is the directory containing `FOR_AGENTS.md`. The destination is `<target-repository>/.zcode/automations/benny/`.
 
 Merge the entire source pack into the destination:
 
@@ -31,40 +31,28 @@ Merge the entire source pack into the destination:
 
 If this file is already being read from the target destination, treat the copy as complete and run the same verification before continuing.
 
-Add pstack to the target repository's `.cursor/settings.json`. If the file or `.cursor` directory does not exist, create it.
+Install pstack's shared skills into the target repository by running `npx skills add ChHsiching/pstack-zcode` there and choosing the workspace scope, so they land under `<target-repository>/.zcode/skills/`. Never copy pack files there.
 
-Merge this entry into the existing JSON or JSONC:
+Reload the target workspace or start a fresh agent rooted there. Verify that these shared pstack skills resolve from workspace scope:
 
-```json
-{
-	"plugins": {
-		"pstack": { "enabled": true }
-	}
-}
-```
+- `pstack-how`
+- `pstack-why`
+- `pstack-tdd`
+- `pstack-unslop`
+- `pstack-principle-separate-before-serializing-shared-state`
+- `pstack-principle-minimize-reader-load`
+- `pstack-principle-guard-the-context-window`
+- `pstack-principle-sequence-verifiable-units`
+- `pstack-principle-fix-root-causes`
+- `pstack-principle-prove-it-works`
 
-Preserve every unrelated top-level setting and every other plugin entry. If `plugins.pstack` already exists, change only its `enabled` value. Preserve comments and valid JSONC syntax when the file uses JSONC. Validate the file after editing it.
+Do not count a skill loaded from the current session or a user-scoped install. The check must show that a fresh agent in the target repository receives pstack through workspace skills.
 
-Reload the target project or start a fresh agent rooted there. Verify that these shared pstack skills resolve from project scope:
+If workspace-scoped skill installation is unavailable or any shared dependency does not resolve, stop and explain the failure.
 
-- `how`
-- `why`
-- `tdd`
-- `unslop`
-- `principle-separate-before-serializing-shared-state`
-- `principle-minimize-reader-load`
-- `principle-guard-the-context-window`
-- `principle-sequence-verifiable-units`
-- `principle-fix-root-causes`
-- `principle-prove-it-works`
+The Benny files are read directly from `.zcode/automations/benny/`. Do not add that directory to a skills root or expect its `SKILL.md` files to appear in the slash-skill list.
 
-Do not count a skill loaded from the current session or a user-scoped plugin. The check must show that a fresh agent in the target repository receives pstack through project settings.
-
-If project-scoped plugin installation is unavailable or any shared dependency does not resolve, stop and explain the failure.
-
-The Benny files are read directly from `.cursor/automations/benny/`. Do not add that directory to a plugin manifest or expect its `SKILL.md` files to appear in the slash-skill list.
-
-Tell the user that `.cursor/settings.json`, `.cursor/automations/benny/`, and any referenced secret-free configuration must be committed before either automation is enabled. Do not commit them unless the user asks.
+Tell the user that `.zcode/skills/`, `.zcode/automations/benny/`, and any referenced secret-free configuration must be committed before either automation is enabled. Do not commit them unless the user asks.
 
 Once this check passes, live automation prompts may read the committed operational files by their stable repository-relative paths. They must not embed a plugin cache path or copy the file contents.
 
@@ -75,11 +63,11 @@ Open these copied examples:
 - `../../templates/configuration.example.yaml`
 - `../reproduce-and-fix-issues/references/feature-map.example.md`
 
-Create user-owned copies outside `.cursor/automations/benny/`. These are configuration files, not pack files. Example locations:
+Create user-owned copies outside `.zcode/automations/benny/`. These are configuration files, not pack files. Example locations:
 
-- Project config, such as `.cursor/benny/configuration.yaml`
-- Project feature map, such as `.cursor/benny/feature-map.md`
-- Project routing map, such as `.cursor/benny/routing.md`
+- Project config, such as `.zcode/benny/configuration.yaml`
+- Project feature map, such as `.zcode/benny/feature-map.md`
+- Project routing map, such as `.zcode/benny/routing.md`
 - User config, such as `~/.config/benny/configuration.yaml`
 - User feature map, such as `~/.config/benny/feature-map.md`
 
@@ -87,7 +75,7 @@ Fill one feature-map section for every user-facing feature the automation may re
 
 Do not edit the copied examples. Pack refreshes may update source-managed files after conflict review, but they must never touch the user-owned copies.
 
-Prefer committed, secret-free files in the target repository when a fresh automation checkout must read them. Otherwise paraphrase the required values into the live prompt. Reference a repository file only after the built-in `/automate` skill confirms that the file is committed in the repository where the automation runs.
+Prefer committed, secret-free files in the target repository when a fresh automation run must read them. Otherwise paraphrase the required values into the live prompt. Reference a repository file only after confirming that the file is committed in the repository where the automation runs.
 
 Use stable repository-relative paths for committed pack and configuration files. Never reference the plugin source directory or a plugin cache path from a live automation.
 
@@ -100,7 +88,8 @@ Ask for or confirm:
 - Repository URL and default branch
 - Triage identity or Slack user ID
 - Issue tracker type, team, project, labels, and intake status
-- Tracker adapter skill or MCP actions
+- Tracker adapter (`gh` CLI for GitHub Issues, or MCP actions)
+- Automation schedule interval in minutes
 - Optional routing map path
 - Required control skill name
 - Required user-facing feature-map path
@@ -109,31 +98,31 @@ Ask for or confirm:
 - Polling and effort budgets
 - Model slug for triage, repro, code work, and media review
 
-Use only model slugs shown as available in the user's Cursor model picker or supported model list. Do not guess a slug and do not carry over a private default.
+Use only model slugs shown as available in the user's model catalog or supported model list. Do not guess a slug and do not carry over a private default.
 
-The source channel, triage identity, repository, tracker adapter, control skill, and feature map must be explicit. Fail setup if any required value stays ambiguous.
+The source channel, triage identity, repository, tracker adapter, control skill, feature map, and schedule must be explicit. Fail setup if any required value stays ambiguous.
 
-Use pstack's `unslop` skill on the final automation names, descriptions, and prompt shims before saving them.
+Use pstack's `pstack-unslop` skill on the final automation names, descriptions, and prompt shims before saving them.
 
 ## 4. Check integration capabilities
 
 The triage automation needs:
 
-- Read access to the configured source Slack channel and its threads
+- Read access to the configured source Slack channel and its threads through the configured Slack MCP server
 - Thread-reply access in that channel
 - Attachment metadata and file download access when reports include media
 - Search, read, create, and update access through the configured issue-tracker adapter
 
 The repro automation needs:
 
-- Read access to the source thread
+- Read access to the source thread through the configured Slack MCP server
 - Thread-reply access in the source channel
 - Optional post and edit access in the configured operations channel
 - Repository read and history access
 - A pull request action that can open a draft pull request
 - The configured control-adapter skill
 
-Prefer configured Cursor Slack actions for reads and posts. The optional `BENNY_SLACK_BOT_TOKEN` may fill a narrow gap such as editing one operations status message or downloading an attachment. Store the value in a secret manager or environment, not in YAML.
+Use the configured Slack MCP server for reads and posts. The optional `BENNY_SLACK_BOT_TOKEN` may fill a narrow gap such as editing one operations status message or downloading an attachment. Store the value in a secret manager or environment, not in YAML.
 
 Do not use undocumented integration endpoints.
 
@@ -141,7 +130,7 @@ Do not use undocumented integration endpoints.
 
 If the user wants reroutes or owner pings:
 
-1. Copy `../triage-issue-reports/references/routing.example.md` outside `.cursor/automations/benny/`.
+1. Copy `../triage-issue-reports/references/routing.example.md` outside `.zcode/automations/benny/`.
 2. Replace every placeholder with public or organization-local values.
 3. Keep owner pings off by default.
 4. Allow a ping only for a configured feature owner or a confirmed likely regression author.
@@ -151,6 +140,8 @@ If no routing map is configured, triage may classify a report but must not guess
 ## 6. Verify the control adapter
 
 Read `../reproduce-and-fix-issues/references/control-adapter.md` and the user's completed feature map.
+
+For a web app, the browser-use plugin's browser skills satisfy this contract; name one of them as the control skill.
 
 Confirm that the named skill can:
 
@@ -168,90 +159,123 @@ If any capability is missing, leave the repro automation disabled. It must fail 
 
 Ask whether this is first-time creation or configuration of existing automations.
 
-Read `../../FOR_AGENTS.md` from the copied pack as the primary user-intent source for either path. Use it to understand the two triggers, tools, instructions, outcomes, and shared rules.
+Read `../../FOR_AGENTS.md` from the copied pack as the primary user-intent source for either path. Use it to understand the two schedules, tools, instructions, outcomes, and shared rules.
+
+### Install the thread guard
+
+Before creating either automation, merge a PreToolUse hook into the target repository's `.zcode/config.json` so a source-channel root post is denied mechanically, not just by prompt. Derive the matcher from the configured Slack MCP server name (`slack` below):
+
+```json
+{
+	"hooks": {
+		"enabled": true,
+		"events": {
+			"PreToolUse": [
+				{
+					"matcher": "^mcp__slack__",
+					"hooks": [
+						{
+							"type": "process",
+							"command": "node",
+							"args": [
+								"${ZCODE_PROJECT_DIR}/.zcode/automations/benny/hooks/enforce-thread-posts.js",
+								"<SOURCE_CHANNEL_ID>"
+							],
+							"timeoutMs": 5000
+						}
+					]
+				}
+			]
+		}
+	}
+}
+```
+
+Preserve every unrelated setting. The hook script ships with the pack at `.zcode/automations/benny/hooks/enforce-thread-posts.js`; pass the configured source channel ID as its argument. With no source channel argument the hook denies every root post.
 
 ### First-time creation
 
 Create one automation at a time.
 
+Both automations recur on the configured cadence from `automations.schedule_interval_minutes`: `recurring` true, `intervalUnit` `minute`, `interval` set to the configured value, and the compatible cron expression `* * * * *`. They fire only while ZCode runs; missed firings are skipped, not backfilled.
+
 For each automation:
 
 1. Read the matching copied prompt template as secondary internal source material.
-2. Turn `FOR_AGENTS.md`, the finished Benny configuration, and the template intent into a complete natural-language request.
-3. Tell the live prompt to read and follow its exact committed operational file under `.cursor/automations/benny/`.
-4. Use the stable repository-relative path, not a plugin source or cache path. Do not copy the operational file contents into the live prompt.
-5. Read and follow the built-in `automate` skill.
-6. Let `automate` discover Slack channels, the repository, and connected integrations.
-7. Let `automate` confirm that the copied pack and any referenced configuration files are committed in the same repository where the automation will run.
-8. Let `automate` show its draft table, obtain approval, ask readiness, and open the Automations editor.
-9. Finish the editor handoff for this automation before starting the next one.
+2. Turn `FOR_AGENTS.md`, the finished Benny configuration, and the template intent into a complete prompt.
+3. Tell the live prompt to read and follow its exact committed operational file under `.zcode/automations/benny/`.
+4. Use the stable repository-relative path, not a source or cache path. Do not copy the operational file contents into the live prompt.
+5. Show the user the complete `CronCreate` arguments: title, schedule, and prompt. Obtain approval before creating.
+6. Create the automation with the `CronCreate` tool in this session.
+7. Verify the created automation with `CronList`: title, schedule, prompt, and enabled state.
+8. Finish this automation before starting the next one.
 
-Give `automate` this complete triage intent, filled from configuration:
+Give `CronCreate` this complete triage intent, filled from configuration:
 
 - Name `benny-triage`.
-- Read and follow `.cursor/automations/benny/skills/triage-issue-reports/SKILL.md` for every run.
-- Trigger on each new top-level report in the configured source Slack channel.
+- Read and follow `.zcode/automations/benny/skills/triage-issue-reports/SKILL.md` for every run.
+- Fire on the configured schedule and scan for new top-level reports in the configured source Slack channel through the configured Slack MCP server.
 - Read the triggering thread and reply only inside it.
-- Use the configured issue-tracker integration.
+- Use the configured issue-tracker adapter.
 - Classify, inspect evidence, trace cause, dedupe, and create only clear new bugs.
 - End one thread-only verdict with the configured `[benny:bug]`, `[benny:performance]`, or `[benny:other]` marker and optional tracker URL.
 - Never post a source-channel root message.
 
-After the triage editor handoff is complete, give `automate` this complete repro and fix intent:
+After the triage automation is verified, give `CronCreate` this complete repro and fix intent:
 
 - Name `benny-reproduce`.
-- Read and follow `.cursor/automations/benny/skills/reproduce-and-fix-issues/SKILL.md` for every run.
-- Trigger on the same new top-level reports in the configured source Slack channel.
+- Read and follow `.zcode/automations/benny/skills/reproduce-and-fix-issues/SKILL.md` for every run.
+- Fire on the same schedule and pick up the same new top-level reports in the configured source Slack channel.
 - Use the configured repository and default branch.
 - Read the source thread and reply only inside it.
-- Include pull request creation and the configured tracker, control-adapter, and feature-map requirements. Paraphrase mapped user paths and states unless `automate` confirms an eligible committed file in the same repository.
+- Include pull request creation and the configured tracker, control-adapter, and feature-map requirements. Paraphrase mapped user paths and states unless an eligible committed file is confirmed in the same repository.
 - Wait for a trusted triage marker before acting.
 - Reproduce the exact symptom twice through the mapped real UI and capture evidence.
 - Verify an existing fix without authoring over it.
 - Attempt an optional bounded fix only after confirmed repro, then open a draft pull request when proof and checks pass.
 - Never post a source-channel root message.
 
-Do not duplicate `automate`'s Slack, repository, integration, completeness, authentication, draft-review, approval, readiness, or editor-handoff work.
+Never write a live prompt that creates, schedules, or configures another automation, and never put a secret value in one.
 
 ### Existing automations
 
-The built-in `automate` skill is creation-only. Do not use it to search for, inspect, or update existing automations.
+`CronCreate` is creation-only. Do not use it to replace automations that already exist.
 
-Finish configuration, routing, control-adapter, and feature-map validation. Then give the user this concise editor checklist.
+Finish configuration, routing, control-adapter, and feature-map validation. Then list the automations with `CronList` and update each directly with `CronUpdate` (its `title` field is required on every update) or in the Automations management page, following this concise checklist.
 
 For the existing triage automation, update:
 
 - Name and description
-- Direct instruction to read `.cursor/automations/benny/skills/triage-issue-reports/SKILL.md`
-- New top-level Slack report trigger and source channel
-- Slack thread read and reply capabilities
-- Issue-tracker integration
+- Direct instruction to read `.zcode/automations/benny/skills/triage-issue-reports/SKILL.md`
+- Recurring schedule and source channel
+- Slack MCP thread read and reply tools
+- Issue-tracker adapter
 - Paraphrased triage instructions, thread-only rule, and Benny verdict markers
 
 For the existing repro automation, update:
 
 - Name and description
-- Direct instruction to read `.cursor/automations/benny/skills/reproduce-and-fix-issues/SKILL.md`
-- Matching Slack trigger and source channel
+- Direct instruction to read `.zcode/automations/benny/skills/reproduce-and-fix-issues/SKILL.md`
+- Matching schedule and source channel
 - Repository and default branch
-- Slack thread read and reply capabilities
+- Slack MCP thread read and reply tools
 - Pull request action
 - Tracker, control-adapter, and feature-map requirements
 - Paraphrased marker wait, evidence, verification, and bounded-fix instructions
 
-Ask the user to update each existing automation directly in its Automations editor. Do not create replacements or duplicates.
+Do not create replacements or duplicates.
 
 ### Creation boundary
 
-Never call a direct automation backend service or backend automation tool. Never use a browser URL that carries draft fields. Never build or open a Cursor protocol deep link. For new automations, the only finish path is the built-in `automate` skill's reviewed Automations editor handoff.
+Never call a direct automation backend service or a headless CLI to create or edit automations. Never put a secret value in a prompt. For new automations, the only finish path is a reviewed `CronCreate` call in this session.
 
-Do not enable either automation until the thread-safety test passes after the editor save.
+Do not enable either automation until the thread-safety test passes after creation.
 
 ## 8. Test thread safety
 
 Use a test channel or a harmless test report.
 
-Before testing, confirm that the target repository's `.cursor/settings.json`, `.cursor/automations/benny/`, and every referenced secret-free configuration file are committed on the branch used by the automation checkout. Confirm that both live prompts point at their exact committed operational files. If any check fails, stop. Tell the user that the automation cannot be enabled yet.
+Before testing, confirm that the target repository's `.zcode/skills/`, `.zcode/automations/benny/`, every referenced secret-free configuration file, and the thread-guard hook entry in `.zcode/config.json` are committed on the branch used by the automation workspace. Confirm that both live prompts point at their exact committed operational files. If any check fails, stop. Tell the user that the automation cannot be enabled yet.
 
 Verify:
 
@@ -260,7 +284,8 @@ Verify:
 3. Repro accepts the marker only from the configured triage identity.
 4. Repro keeps the same immutable source coordinates.
 5. No source-channel root message appears.
-6. A delegated worker cannot use any Slack write action.
-7. Missing coordinates, a deleted parent, or a failed preflight produces no post and no tracker issue.
+6. The installed thread-guard hook denies a Slack post to the source channel that lacks a `thread_ts`.
+7. A delegated worker cannot use any Slack write action.
+8. Missing coordinates, a deleted parent, or a failed preflight produces no post and no tracker issue.
 
-Enable normal traffic only after all seven checks pass.
+Enable normal traffic only after all eight checks pass.

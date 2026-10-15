@@ -20,24 +20,25 @@ Load the external Benny configuration supplied by the automation. If the config 
 - Post one substantive verdict. Do not narrate progress.
 - The coordinator is the only Slack poster.
 - Delegated workers return findings only. They must be read-only and receive no Slack credentials or write actions.
-- Every child prompt must forbid `SendSlackMessage`, `PostToSlack`, `chat.postMessage`, and every other Slack write.
+- Every child prompt must forbid `chat.postMessage` and every other Slack write action of the configured Slack MCP server.
 - If worker isolation cannot enforce those limits, do the work in the coordinator.
 - Never create an issue that cannot link back to the source thread.
 - Prefer no ticket over a guessed or duplicate ticket.
-- Apply pstack's `principle-separate-before-serializing-shared-state` to source coordinates.
-- Apply pstack's `principle-minimize-reader-load` and `unslop` skills to the final verdict.
+- Apply pstack's `pstack-principle-separate-before-serializing-shared-state` to source coordinates.
+- Apply pstack's `pstack-principle-minimize-reader-load` and `pstack-unslop` skills to the final verdict.
 
 ## 1. Freeze source coordinates
 
 Before making a work list or delegating:
 
-1. Read `source_channel_id` from the trigger.
-2. Require it to equal the configured source channel.
-3. Set `SOURCE_THREAD_TS` to `trigger.thread_ts` when present. Otherwise use `trigger.ts`.
-4. Require a nonempty `SOURCE_THREAD_TS`.
-5. Store `SOURCE_CHANNEL_ID` and `SOURCE_THREAD_TS` as immutable values.
-6. Read the thread and verify that its root has exactly those coordinates.
-7. Fetch a stable source permalink.
+1. Scan the configured source Slack channel through the configured Slack MCP server for a top-level report whose thread holds no triage verdict yet. That report is this run's trigger.
+2. Read `source_channel_id` from the trigger.
+3. Require it to equal the configured source channel.
+4. Set `SOURCE_THREAD_TS` to `trigger.thread_ts` when present. Otherwise use `trigger.ts`.
+5. Require a nonempty `SOURCE_THREAD_TS`.
+6. Store `SOURCE_CHANNEL_ID` and `SOURCE_THREAD_TS` as immutable values.
+7. Read the thread and verify that its root has exactly those coordinates.
+8. Fetch a stable source permalink.
 
 Every later source read and post must use those stored values. Never replace them with a reply timestamp or an operations-thread timestamp.
 
@@ -68,7 +69,7 @@ Use evidence already in the thread before asking the reporter for more.
 
 ## 3. Trace cause before routing
 
-Do a bounded source and history pass before choosing an owner or destination. Use pstack's `how` skill to trace the path from the reported action to the observed result. Use `why` when the report looks like a regression or touches defensive code.
+Do a bounded source and history pass before choosing an owner or destination. Use pstack's `pstack-how` skill to trace the path from the reported action to the observed result. Use `pstack-why` when the report looks like a regression or touches defensive code.
 
 1. Identify the likely code path from the reported action to the observed result.
 2. Check whether the visible symptom belongs to that code path or a dependency below it.

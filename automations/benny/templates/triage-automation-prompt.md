@@ -1,16 +1,22 @@
 # Triage automation prompt
 
-> Source material for the copied setup workflow. Paraphrase this intent into a built-in `automate` draft after `automate` confirms that the copied pack is committed in the repository where the automation will run.
+> Source material for the copied setup workflow. Paraphrase this intent into the scheduled ZCode automation's prompt after setup confirms that the copied pack is committed in the repository where the automation will run.
 
-Read and follow `.cursor/automations/benny/skills/triage-issue-reports/SKILL.md` for this run.
+Read and follow `.zcode/automations/benny/skills/triage-issue-reports/SKILL.md` for this run.
 
-Configuration source. Include this repository-relative path only when it is committed in the same target repository. Otherwise paraphrase the configured values. Never use a plugin source or cache path:
+Configuration source. Include this repository-relative path only when it is committed in the same target repository. Otherwise paraphrase the configured values. Never use a source or cache path:
 
 ```text
 {{BENNY_CONFIG_PATH}}
 ```
 
-Trigger:
+Schedule:
+
+```text
+every {{SCHEDULE_INTERVAL_MINUTES}} minutes
+```
+
+Each firing scans the configured source Slack channel through the configured Slack MCP server for a top-level report whose thread holds no triage verdict yet. That report is this run's trigger. Freeze its channel and root thread timestamp as:
 
 ```json
 {
@@ -20,7 +26,7 @@ Trigger:
 }
 ```
 
-The creation intent should describe this as a new top-level report in the configured source Slack channel.
+The creation intent should describe this as a recurring scan of the configured source Slack channel for new top-level reports.
 
 Treat the source channel and root thread timestamp as immutable. If either is missing or does not match configuration, stop without posting or writing to the issue tracker.
 
