@@ -1,0 +1,28 @@
+# Cursor-residue allowlist: "<path> :: <token> :: <one-line justification>".
+# The path is a glob (* crosses /); the token is one from the lint's registry or *.
+# An entry with no matching occurrence is stale and fails the lint.
+
+# ZCode-side research quoting the Cursor mechanisms it maps; source material, never user-facing
+docs/research/* :: * :: adaptation research quoting the Cursor mechanism under analysis as source material
+
+# Upstream prose pending the docs ticket (#13); each entry goes stale as its file is adapted
+README.md :: * :: upstream README, not yet adapted; the docs ticket (#13) owns the swap
+docs/guide/01-setup.md :: * :: upstream guide prose, not yet adapted; the docs ticket (#13) owns the swap
+docs/guide/02-poteto-mode.md :: * :: upstream guide prose, not yet adapted; the docs ticket (#13) owns the swap
+docs/guide/05-build-and-clean.md :: * :: upstream guide prose, not yet adapted; the docs ticket (#13) owns the swap
+docs/guide/06-verify-and-ship.md :: * :: upstream guide prose, not yet adapted; the docs ticket (#13) owns the swap
+docs/guide/07-overnight.md :: * :: upstream guide prose, not yet adapted; the docs ticket (#13) owns the swap
+docs/guide/09-make-it-yours.md :: * :: upstream guide prose, not yet adapted; the docs ticket (#13) owns the swap
+docs/guide/10-recipes-and-pitfalls.md :: * :: upstream guide prose, not yet adapted; the docs ticket (#13) owns the swap
+
+# Adapted surfaces with no ZCode equivalent for the named mechanism
+GLOSSARY.md :: .mdc :: vocabulary entry lists `.mdc` rule on its avoid list
+GLOSSARY.md :: agent-transcripts :: vocabulary entry lists agent-transcripts on its avoid list
+skills/poteto-mode/scripts/worktree-audit.sh :: .cursor/ :: LAST_CHAT column dates each worktree from Cursor-era ~/.cursor/projects transcripts; the -d guard degrades it to "-" on ZCode, where sessions have no directory (ReadSessionContext is query-only)
+skills/poteto-mode/scripts/worktree-audit.sh :: agent-transcripts :: LAST_CHAT column dates each worktree from Cursor-era ~/.cursor/projects transcripts; the -d guard degrades it to "-" on ZCode, where sessions have no directory (ReadSessionContext is query-only)
+skills/make-bot-ui/SKILL.md :: update_state :: drives Cursor Automations webhook routines; ZCode has no hosted webhook endpoint (ADR 0007), skill kept dormant
+skills/make-bot-ui/SKILL.md :: cursor.sh :: drives Cursor Automations webhook routines; ZCode has no hosted webhook endpoint (ADR 0007), skill kept dormant
+skills/poteto-mode/scripts/watch-pr/* :: Bugbot :: counts review passes by Cursor's Bugbot GitHub bot; lives on the GitHub side, works wherever Bugbot is installed, inert elsewhere
+skills/poteto-mode/playbooks/autopilot-full.md :: /loop :: Cursor's /loop heartbeat has no ZCode built-in; the adapted dynamic workflow re-loops in script (ADR 0006) while the plan text keeps the upstream arming phrase
+skills/poteto-mode/scripts/check-plan.mjs :: /loop :: plan-contract marker matching the /loop 1h phrase autopilot-full.md still arms
+skills/poteto-mode/scripts/check-plan.test.ts :: /loop :: fixture for the check-plan /loop 1h marker

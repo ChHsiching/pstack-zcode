@@ -1,0 +1,60 @@
+name: Cursor residue lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cursor-residue lint
+        run: scripts/cursor-residue-lint.sh
+
+  # Report only: prints the pstack commits upstream has that this tree lacks.
+  # Never merges and never opens PRs; sync manually with scripts/sync-upstream.sh.
+  upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Report new upstream pstack commits
+        run: |
+          set -eu
+          git remote add upstream https://github.com/cursor/plugins.git
+          git fetch upstream main
+          tip="$(git subtree split --prefix=pstack upstream/main | tail -n 1)"
+          echo "upstream pstack tip: $tip"
+          base="$(git merge-base "$tip" HEAD || true)"
+          summary="${GITHUB_STEP_SUMMARY:-/dev/stdout}"
+          if [ -z "$base" ]; then
+            {
+              echo "## Upstream pstack delta"
+              echo
+              echo "No common ancestry with upstream pstack tip \`${tip}\`; re-record the base per docs/adr/0001."
+            } | tee -a "$summary"
+            exit 0
+          fi
+          count="$(git rev-list --count "$base..$tip")"
+          {
+            echo "## Upstream pstack delta: $count new commit(s)"
+            echo
+            echo '```'
+            git log --oneline "$base..$tip"
+            echo '```'
+            echo
+            echo "Report only. Sync manually with \`scripts/sync-upstream.sh\`."
+          } | tee -a "$summary"
