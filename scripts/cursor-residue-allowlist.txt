@@ -5,15 +5,11 @@
 # ZCode-side research quoting the Cursor mechanisms it maps; source material, never user-facing
 docs/research/* :: * :: adaptation research quoting the Cursor mechanism under analysis as source material
 
-# Upstream prose pending the docs ticket (#13); each entry goes stale as its file is adapted
-README.md :: * :: upstream README, not yet adapted; the docs ticket (#13) owns the swap
-docs/guide/01-setup.md :: * :: upstream guide prose, not yet adapted; the docs ticket (#13) owns the swap
-docs/guide/02-poteto-mode.md :: * :: upstream guide prose, not yet adapted; the docs ticket (#13) owns the swap
-docs/guide/05-build-and-clean.md :: * :: upstream guide prose, not yet adapted; the docs ticket (#13) owns the swap
-docs/guide/06-verify-and-ship.md :: * :: upstream guide prose, not yet adapted; the docs ticket (#13) owns the swap
-docs/guide/07-overnight.md :: * :: upstream guide prose, not yet adapted; the docs ticket (#13) owns the swap
-docs/guide/09-make-it-yours.md :: * :: upstream guide prose, not yet adapted; the docs ticket (#13) owns the swap
-docs/guide/10-recipes-and-pitfalls.md :: * :: upstream guide prose, not yet adapted; the docs ticket (#13) owns the swap
+# README's differences table names the Cursor mechanisms pstack-zcode swaps, by design
+README.md :: * :: differences table names the Cursor mechanisms pstack-zcode swaps for ZCode equivalents
+
+# Upstream artwork alt text keeps the names the image actually shows
+docs/guide/10-recipes-and-pitfalls.md :: /loop :: alt text names the /loop card shown in the upstream recipes.jpg artwork
 
 # Adapted surfaces with no ZCode equivalent for the named mechanism
 GLOSSARY.md :: .mdc :: vocabulary entry lists `.mdc` rule on its avoid list
