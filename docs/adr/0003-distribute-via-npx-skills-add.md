@@ -9,5 +9,5 @@ Installation is `npx skills add ChHsiching/pstack-zcode` (the vercel-labs/skills
 
 ## Consequences
 
-- The two subagents (`agents/poteto-agent.md`, `agents/comment-sicko.md`) are not installed by the skills CLI; the README documents copying them to `~/.zcode/agents/`.
+- The two subagents (`agents/poteto-agent.md`, `agents/comment-sicko.md`) are not installed by the skills CLI; the README points at `scripts/install-agents.sh`, which fetches both from the repo's raw URLs and self-checks the result. The CLI stays the only channel for the collection itself (#21).
 - Final install-command behavior must be verified after adaptation lands (discovery was validated against a synthetic tree during research).

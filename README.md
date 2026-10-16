@@ -22,19 +22,20 @@ npx skills add ChHsiching/pstack-zcode -g -a zcode -y
 
 the [skills CLI](https://github.com/vercel-labs/skills) installs all skills into `~/.zcode/skills/` (global scope) and `~/.agents/skills/`. skills load in new ZCode sessions, so start a fresh session after installing. update with `npx skills update -g`, remove with `npx skills remove`.
 
-the two subagents ship outside the collection, and the skills CLI does not install agent files. copy them by hand, one line each:
+the two subagents ship outside the collection, and the skills CLI does not install agent files. one line fetches both from this repo's raw URLs, self-checks them (frontmatter parses, names intact), and exits non-zero on any miss. re-runs install nothing when the files are identical:
 
 ```bash
-mkdir -p ~/.zcode/agents && curl -fsSL https://raw.githubusercontent.com/ChHsiching/pstack-zcode/main/agents/poteto-agent.md -o ~/.zcode/agents/poteto-agent.md
-curl -fsSL https://raw.githubusercontent.com/ChHsiching/pstack-zcode/main/agents/comment-sicko.md -o ~/.zcode/agents/comment-sicko.md
+curl -fsSL https://raw.githubusercontent.com/ChHsiching/pstack-zcode/main/scripts/install-agents.sh | sh
 ```
+
+the script installs into `~/.zcode/agents/` and honors `$HOME`, so `HOME=<tempdir>` isolates a test install. pass `--check` to verify files already in place without fetching.
 
 ## differences from cursor pstack
 
 | cursor pstack | pstack-zcode |
 |---|---|
 | `/add-plugin pstack` installs a plugin | `npx skills add ChHsiching/pstack-zcode` installs the skills collection |
-| subagents ship inside the plugin | the two agent files are copied to `~/.zcode/agents/` by hand |
+| subagents ship inside the plugin | the two agent files are fetched into `~/.zcode/agents/` by one script with a self-check |
 | skills invoke as `/poteto-mode`, `/how`, … | every skill carries a `pstack-` prefix: `/pstack-poteto-mode`, `/pstack-how`, … |
 | model roles live in a cursor rule (`~/.cursor/rules/pstack-models.mdc`) | model roles live in a data file (`~/.zcode/pstack/models.md`) read at spawn time; with no file, every role runs on the session model |
 | panels spawn through the Task tool with `subagent_type` | panels fan out through dynamic workflows, one agent per entry with its own model and reasoning level |
