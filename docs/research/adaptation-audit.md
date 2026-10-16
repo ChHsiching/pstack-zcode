@@ -75,7 +75,28 @@
 ### L. 我们的新增基建（24 文件，非适配、自由评审）
 - docs/adr×7、docs/research×6、docs/agents×4、scripts×3、hook×1、GLOSSARY、AGENTS.md、CI workflow。
 
-## 四、已知残留与让步（全量，无隐瞒）
+## 四、适配取舍与未成功清单（没有 1:1 平移的功能）
+
+分三档：❌ 未适配（放弃）、⚠️ 降级实现（可用但有损失）、⭕ 丢弃（无功能损失）。决策依据见 ADR 与 grilling 记录。
+
+| 档 | 功能 | 上游（Cursor） | pstack-zcode 现状 | 损失 | 依据 |
+|---|---|---|---|---|---|
+| ❌ | **make-bot-ui 按钮页** | api2.cursor.sh 托管 webhook routine | 技能休眠保留，未改造 | 功能整体不可用（除非自建公网 webhook） | ADR-0007 搁置 |
+| ⚠️ | **常驻模式** | Option+Enter 全程 Custom Mode | 每任务手动 `/pstack-poteto-mode` | 无"一直开着"体验 | Q8 决策 |
+| ⚠️ | **/loop 自主长跑** | Cursor 内建循环唤醒 | workflow 脚本自循环 + Stop hook 3 轮弱等价 | 长跑节奏不同 | ADR-0006 |
+| ⚠️ | **云端并行执行** | swarm `environment:"cloud"` / Cloud Mac | 本地 actor + worktree 隔离 | 无云端算力与沙箱 | ADR-0006 |
+| ⚠️ | **自动化 24/7** | Cursor Automations 云端常驻 | 本机 CronCreate；睡眠不触发、错过不补 | 离线窗口漏报 | ADR-0007（明示接受） |
+| ⚠️ | **多模型面板默认值** | 默认 opus+grok 异家族互查 | 默认全 inherit（单模型），diversity 需自 pin | 开箱多模型评审没有 | Q13 / ADR-0005 |
+| ⚠️ | **会话转录挖掘** | 全量扫描 ~/.cursor/projects/*.jsonl | ReadSessionContext 查询式；ZCode 无会话列表，依赖显式 id | 无法主动翻历史 | 票#9；T7 实测 |
+| ⚠️ | **仅显式调用** | disable-model-invocation 硬开关 | 无开关，description 文字约束 | 模型可能自动触发 | 映射表#5 |
+| ⚠️ | **评审生态** | Bugbot、cursor-team-kit 内建 | 修剪/近似（playwright、chrome-devtools）；Bugbot 惰性 | 评审工具链弱于原生态 | 票#4 |
+| ⚠️ | **worktree-audit LAST_CHAT** | 从 Cursor 转录取最后会话时间 | `-d` 守卫降级为 "-" | 该列缺失 | 白名单 |
+| ⚠️ | **子代理随装** | 插件自带 | skills CLI 不装 agents，手动复制 | 安装多一步 | ADR-0003 |
+| ⭕ | Custom Mode 徽章 icon/color | 徽章样式 | 移除 | 纯装饰无损失 | 映射表#6 |
+
+平台性限制两项：workflow 编译器拒绝运行时 pin 模型（配真模型后需重新生成，fail-closed）；子代理不可嵌套（ADR-0006 编排改写的动因）。
+
+## 五、已知残留与让步（全量，无隐瞒）
 
 1. **白名单放行 13 条**（`scripts/cursor-residue-allowlist.txt`，每条带一行理由）：worktree-audit.sh 的转录目录（ReadSessionContext 是查询式 API，无目录机制可换）、make-bot-ui 的 api2.cursor.sh（ADR-0007 搁置）、watch-pr 的 Bugbot 字样、autopilot 的 /loop 字样（ADR-0006）等。
 2. recipes 页一处图片 alt 文本仍写 /loop（上游图片本身画着它，改 alt 反而失真）。
