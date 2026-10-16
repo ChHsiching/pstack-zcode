@@ -50,6 +50,7 @@ the script installs into `~/.zcode/agents/` and honors `$HOME`, so `HOME=<tempdi
 
 - benny's automations fire only while your machine and ZCode are awake; a firing missed while asleep is skipped, not backfilled.
 - there is no persistent mode by default. `/pstack-poteto-mode` attaches to the task you type it on, so start each task with it. an [opt-in resident hook](#resident-mode-optional) can carry it across sessions.
+- there is no explicit-only switch. ZCode ignores `disable-model-invocation` — every skill that ships it keeps it: a hard gate on cursor and claude code, ignored here — and `when_to_use` is soft guidance sharing one 250-character injection window with `description`, which these skills' long descriptions leave mostly truncated away. on a machine with 200+ installed skills (the one the research measured) the whole list drops to names-only past the 20,000-character metadata budget, and no wording is visible at all; the knob is `skills.metadataBudget` in `~/.zcode/cli/config.json`. the hard equivalent is a [project command shim](#explicit-only-by-command-shim-optional).
 
 ## resident mode (optional)
 
@@ -66,6 +67,20 @@ node scripts/resident/install.mjs --remove
 ```
 
 cost: each new session in a project that has poteto-mode installed starts with a condensed summary injected, about 300 tokens; projects without poteto-mode pay only a fast directory probe. config snapshots at session start, so start a fresh session after installing or removing. decision record: [ADR-0009](./docs/adr/0009-resident-mode-opt-in.md).
+
+## explicit-only by command shim (optional)
+
+commands fire only when you type `/name` and never enter the model's skill list, so a command is the hard explicit-only equivalent ZCode does have. a command's `skills:` frontmatter auto-mounts skill bodies, which turns the shim into a command shell with the skill as its body — the trade is losing the Skill tool's on-demand loading. to gate `/pstack-poteto-help`, save this as `<repo>/.zcode/commands/pstack-poteto-help.md`:
+
+```markdown
+---
+description: pstack-poteto-help, explicit-only
+skills: pstack-poteto-help
+---
+$ARGUMENTS
+```
+
+the file name is the command name (lowercase, hyphens, at most 64 characters); frontmatter values stay on one line; `$ARGUMENTS` carries what you type after the slash. swap in any skill name. full mechanics and sources: [docs/research/skill-auto-invocation-controls.md](./docs/research/skill-auto-invocation-controls.md).
 
 ## get started
 
