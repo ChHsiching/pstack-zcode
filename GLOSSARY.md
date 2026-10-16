@@ -68,5 +68,13 @@ ZCode's scheduled unattended prompt run (the CronCreate family); the adaptation 
 _Avoid_: routine, cron job
 
 **session context**:
-The material ZCode's `ReadSessionContext` tool returns for one `sess_*` session id — persisted conversation retrieved by query, never a file on disk. No session listing exists and only the main thread can call the tool; skills retrieve in the parent and hand subagents the material.
+The material ZCode's `ReadSessionContext` tool returns for one `sess_*` session id — persisted conversation retrieved by query, never a file on disk. Only the main thread can call the tool; skills retrieve in the parent and hand subagents the material.
 _Avoid_: transcript, agent-transcripts
+
+**session store**:
+`~/.zcode/cli/db/db.sqlite`, ZCode's local session database; read-only queries against it are the listing route (by workspace directory, recency, content), fail-closed to asking for explicit ids when absent or schema-drifted.
+_Avoid_: transcripts directory, session API
+
+**resident mode**:
+The opt-in SessionStart hook that injects a condensed poteto-mode summary into every new session; installed explicitly via script and removable with one command, never part of the default install.
+_Avoid_: always-on mode, global mode
