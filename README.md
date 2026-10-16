@@ -41,7 +41,7 @@ the script installs into `~/.zcode/agents/` and honors `$HOME`, so `HOME=<tempdi
 | panels spawn through the Task tool with `subagent_type` | panels fan out through dynamic workflows, one agent per entry with its own model and reasoning level |
 | orchestrate and autopilot nest subagents three deep | orchestration is workflow topology: the script queues, spawns, and gates; no agent nests |
 | a custom mode keeps `/poteto-mode` on across turns | type `/pstack-poteto-mode` at the start of each task |
-| cursor's `/loop` re-wakes a run | the playbooks run their own watchers and heartbeats |
+| cursor's `/loop` re-wakes a run | long runs follow a documented loop recipe: workflow self-loop, stop-hook rounds, or a cron wake ([overnight guide](./docs/guide/07-overnight.md)) |
 | cursor Projects host standing coordinators in the cloud | orchestrate runs one coordinator chat locally over a workflow |
 | cloud subagents give each parallel task its own VM | local worktrees give each parallel task its own checkout |
 | benny runs 24/7 in cursor's cloud | benny runs on native ZCode scheduled automations, on your machine |
