@@ -15,3 +15,7 @@ The five canonical triage roles map 1:1 to same-named GitHub labels. See `docs/a
 ### Domain docs
 
 Single-context: `GLOSSARY.md` and `docs/adr/` at the repo root, created lazily. See `docs/agents/domain.md`.
+
+### Upstream sync
+
+Adaptation-aware procedure for absorbing upstream pstack changes (research-first, no smuggling). See `docs/agents/upstream-sync.md`.
