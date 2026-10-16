@@ -17,8 +17,6 @@ docs/adr/0009-* :: Custom Mode :: the ADR records which upstream always-on mode 
 # Adapted surfaces with no ZCode equivalent for the named mechanism
 GLOSSARY.md :: .mdc :: vocabulary entry lists `.mdc` rule on its avoid list
 GLOSSARY.md :: agent-transcripts :: vocabulary entry lists agent-transcripts on its avoid list
-skills/poteto-mode/scripts/worktree-audit.sh :: .cursor/ :: LAST_CHAT column dates each worktree from Cursor-era ~/.cursor/projects transcripts; the -d guard degrades it to "-" on ZCode, where sessions have no directory (ReadSessionContext is query-only)
-skills/poteto-mode/scripts/worktree-audit.sh :: agent-transcripts :: LAST_CHAT column dates each worktree from Cursor-era ~/.cursor/projects transcripts; the -d guard degrades it to "-" on ZCode, where sessions have no directory (ReadSessionContext is query-only)
 skills/make-bot-ui/SKILL.md :: update_state :: drives Cursor Automations webhook routines; ZCode has no hosted webhook endpoint (ADR 0007), skill kept dormant
 skills/make-bot-ui/SKILL.md :: cursor.sh :: drives Cursor Automations webhook routines; ZCode has no hosted webhook endpoint (ADR 0007), skill kept dormant
 skills/poteto-mode/scripts/watch-pr/* :: Bugbot :: counts review passes by Cursor's Bugbot GitHub bot; lives on the GitHub side, works wherever Bugbot is installed, inert elsewhere

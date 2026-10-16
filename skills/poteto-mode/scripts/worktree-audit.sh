@@ -12,6 +12,8 @@
 #   merge into; pass -b when they differ.
 set -u
 
+script_dir=$(cd "$(dirname "$0")" && pwd)
+
 base=""
 while [ $# -gt 0 ]; do
 	case "$1" in
@@ -61,9 +63,6 @@ elif raw=$(gh pr list --author "@me" --state all --limit 1000 \
 fi
 [ -s "$prs" ] || echo "[]" > "$prs"
 
-# Transcripts dir: ~/.cursor/projects/<slugified-repo-path>/agent-transcripts.
-slug=$(printf '%s' "$main_wt" | sed 's#^/##; s#/#-#g')
-transcripts="$HOME/.cursor/projects/$slug/agent-transcripts"
 now=$(date +%s)
 
 echo "# base: $base"
@@ -100,14 +99,16 @@ git worktree list --porcelain | awk '/^worktree /{print $2}' | while read -r wt;
 		'.[] | select(.head==$b) | "#\(.number)/\(.state)"' "$prs" 2>/dev/null | head -1)
 	[ -z "$pr" ] && pr="-"
 
-	# Most recent chat whose transcript operated in this worktree. Match path
-	# followed by "/" or a quote so glint-482 does not match glint-482-r37.
+	# Most recent interactive session in this worktree, from the read-only
+	# session store via the sibling session-store.py helper (mode=ro, Windows
+	# short-path normalized inside). No python, or a missing or unreadable
+	# store, degrades LAST_CHAT to "-"; the audit still completes.
 	last="-"; last_ts=0
-	if [ -d "$transcripts" ]; then
-		f=$(rg -l -e "${wt}/" -e "${wt}\"" "$transcripts" 2>/dev/null \
-			| xargs stat -f '%m %N' 2>/dev/null | sort -rn | head -1)
-		if [ -n "$f" ]; then last_ts=$(echo "$f" | awk '{print $1}')
-			last=$(date -r "$last_ts" '+%Y-%m-%d' 2>/dev/null); fi
+	updated=$(python "$script_dir/session-store.py" list --dir "$wt" --days 0 --limit 1 2>/dev/null \
+		| awk -F'\t' 'NR==2 {print $2; exit}')
+	if [ -n "$updated" ]; then
+		last=${updated%% *}
+		last_ts=$(date -d "$updated" +%s 2>/dev/null || echo 0)
 	fi
 	recent=$([ "$last_ts" -gt 0 ] 2>/dev/null && [ $(( (now - last_ts) / 86400 )) -le 4 ] && echo yes || echo no)
 
