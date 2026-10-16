@@ -11,7 +11,9 @@ Write `~/.zcode/pstack/models.md`, a data file that sets pstack's model per role
 
 ### 1. Detect available models
 
-Enumerate the model ids you can pin for a subagent, as `providerId/modelId`. That is the dependable source: query the model catalog tool first, and record each model's reasoning levels when it lists them. When no catalog is available, read `~/.zcode/v2/model-providers.json` and list every configured provider's models (never quote its API keys). When neither source yields models, ask the user to paste the model ids they have access to. Never write a real model id you have not confirmed is available. The alias `inherit-parent` is always valid even though it is not a detected model.
+Enumerate the model ids you can pin for a subagent, as `providerId/modelId`. That is the dependable source: query the model catalog tool first, and record each model's reasoning levels when it lists them. When no catalog is available, read the actually-configured providers — the union of `~/.zcode/v2/provider_config.json` (each provider rule with access credentials contributes its `modelOrder` and `personalModelIds`, dropping models a model rule marks `enabled: false`) and `~/.zcode/v2/config.json` (each provider not `enabled: false` and carrying no `systemDisabledReason` contributes its `models` keys, whose `reasoning.variants` are the levels) — deduplicated by `providerId/modelId`. Never read `~/.zcode/v2/model-providers.json`: it is a template catalog where most entries have no keys, so it lists models you cannot run. Never quote an API key, including the nested `access.apiKey` and `options.apiKey` fields. When neither source yields models, ask the user to paste the model ids they have access to. Never write a real model id you have not confirmed is available. The alias `inherit-parent` is always valid even though it is not a detected model.
+
+Tag every detected model with a family, judged from the model id first — one provider can host two families — and from the provider id only when the model id yields none. Then drop blocked models from the detected set: any model id matching `deepseek[-_]?v?\d*[-_]?flash` case-insensitively (the deepseek-flash family, both local spellings `deepseek/deepseek-flash` and `Deepseek-v4-flash`) is never proposed.
 
 ### 2. Load current state
 
@@ -26,9 +28,17 @@ The default role-to-model mapping is the table shape shown in step 5 below: ever
 - `medium — high reasoning`
 - `small — medium reasoning`
 
-**(b) Apply it.** Build the working table from the defaults, and on a re-run keep any role you changed by model, list, or `inherit-parent`. `unlimited`, `large`, `medium`, and `small` set the reasoning level of every pinned model, panel entries included, to `max`, `xhigh`, `high`, or `medium`. Use the highest level the model supports at or below the target; a model with no levels keeps its own default. `inherit-parent` does not change.
+**(b) Offer a diversity panel once.** When the detected set holds at least two distinct families and the panel rows still sit at their default (an existing file that already carries a panel choice skips this), ask one AskUserQuestion right after the budget answer, offering exactly these choices:
 
-**(c) Show the roles and confirm.** Show every role with its model, marking any real model id not in the detected set as needing a choice. Also list each line step 2 dropped. Ask whether to accept as-is or change specific roles, offering the detected models plus `inherit-parent` (the role runs on the session model) as the options. Prefer AskUserQuestion over free text. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena selects one value from it whose model's provider differs from the parent's when possible. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
+- `two-family panel — inherit-parent, <other-family model> (Recommended)` — name a concrete detected model from a family other than the session model's, preferring a provider that is not a localhost endpoint. Adopting sets every panel row to `inherit-parent, <other-family model>`: the first seat keeps session-model semantics, the second seats cross-check from the other family, and all other roles stay `inherit-parent`.
+- `keep all-inherit` — the default; re-run this skill anytime to change your mind.
+- `customize per role` — skip the presets and go straight to the per-role confirm below.
+
+A decline or an unanswered question writes nothing and leaves no trace, so the next run offers again; never record a decline as a per-role choice.
+
+**(c) Apply it.** Build the working table from the defaults, and on a re-run keep any role you changed by model, list, or `inherit-parent`. `unlimited`, `large`, `medium`, and `small` set the reasoning level of every pinned model, panel entries included, to `max`, `xhigh`, `high`, or `medium`. Use the highest level the model supports at or below the target; a model with no levels keeps its own default. `inherit-parent` does not change.
+
+**(d) Show the roles and confirm.** Show every role with its model, marking any real model id not in the detected set as needing a choice. Also list each line step 2 dropped. Ask whether to accept as-is or change specific roles, offering the detected models plus `inherit-parent` (the role runs on the session model) as the options. Prefer AskUserQuestion over free text. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena selects one value from it whose model's provider differs from the parent's when possible. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
 
 ### 4. Validate
 
