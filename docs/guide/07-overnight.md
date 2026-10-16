@@ -117,4 +117,50 @@ pstack ships this as a dormant [automation pack](../../automations/benny/README.
 
 **Pitfall:** a duration is not a finish condition. "work on this for 4 hours" gives the agent nothing to check, and you'll wake up to four hours of motion instead of a result. Give the run a predicate that can pass or fail.
 
+## Long-run recipes
+
+The wake is the part you pick on ZCode. Three mechanisms carry a long run, each with its own clock: match the mechanism to the night, and read its limit before you bet a morning on it.
+
+### Workflow self-loop
+
+The whole night is one dynamic workflow. The loop is TypeScript control flow in the script, so the cap and the exit are code you can read before you leave.
+
+- **Use it when** the task has a checkable finish condition and phases that gate on each other — the autopilot shape. This mechanism carries the `/loop 1h` heartbeat [autopilot-full](../../skills/poteto-mode/playbooks/autopilot-full.md) arms: the plan text keeps the phrase, and the tick it names is the workflow re-looping in script.
+- **Cap and wake:** the script declares its round cap and finish predicate (`for (let round = 1; round <= 40; round++)`), so the run ends by finishing or by spending the count — count rounds or tasks, not hours, because the sandbox has no clock. The run works in the background and the completion notification arrives on its own. A restart marks the live run `stopped(interrupted)`, and resuming picks up where it waited with finished steps replayed free. A deterministic provider error marks it `stopped(provider)` until you fix the cause and resume.
+- **Limit:** progress needs the app running, and a decision the script cannot make stops the run at a hole or an escalation until the main session answers.
+
+### Stop-hook rounds
+
+One chat, a few extra turns. A `Stop` hook may ask the model to continue (config hooks, `hooks.enabled: true`).
+
+- **Use it when** a watched run keeps trying to stop a few turns early — the verification tail, one more fix round — and re-prompting would cost more than the hook.
+- **Cap and wake:** it wakes when the model stops, and continues at most three times.
+- **Limit:** three turns of one chat. It stretches the tail of a watched run; a whole night needs one of the other two mechanisms.
+
+### Cron wake
+
+A scheduled automation (`CronCreate`) fires a prompt into the session that created it, on a cron or a minute-level interval, and survives restarts.
+
+- **Use it when** the run must re-check on a schedule while you're away: resume a parked run every hour, re-probe a stuck queue each morning.
+- **Cap and wake:** it fires while the machine is awake and the app running; sleep skips the tick, and a missed one-shot lands as skipped — nothing backfills. Turn on Keep awake for the hours a schedule must hold. The machine holds twenty automations at most, so delete one to free its slot.
+- **Limit:** the fired turn can neither create nor modify automations, so its prompt resumes work and leaves the re-arming to you.
+
+None of the three is a cloud service. The work runs on this machine, inside the running app, so shape the night for a machine that sleeps. A true around-the-clock executor is a cloud decision this collection has researched and parked — conditionally feasible, the blockers named, the default no build — which leaves the combo below as the honest overnight shape.
+
+### The combo: waves, wakes, and a safe pause
+
+One recipe for a segmented night. The workflow advances the work, the cron wakes the session, and every boundary leaves a checkpoint a cold start can resume from.
+
+1. **Arm the workflow.** Ask for the task as a dynamic workflow by name (a workflow starts only on an explicit ask), its script looping waves under an explicit round cap and exiting on the finish predicate. Done when the confirmation window shows the run and it settles into the background.
+2. **Create the wake.** In the same session, `CronCreate` an hourly automation whose prompt is:
+
+   ```text
+   one wake tick: check the run. if it is stopped, resume it from where it waited. if the finish condition holds, report done and go idle. otherwise let it work and check again next tick.
+   ```
+
+   Done when the automation list shows one entry bound to this session.
+3. **Pause safely at every boundary you draw.** When you stop the night on purpose, the [Pause safely playbook](../../skills/poteto-mode/playbooks/pause-safely.md) finishes or backs out the current step, commits one `wip:` checkpoint, and writes the resume note the next wake reads cold. Done when the stop leaves a commit plus a note.
+4. **Keep the machine awake** for the hours the schedule must fire. Slept hours skip their ticks; the next fire resumes from the checkpoint.
+5. **Audit and disarm in the morning.** `/pstack-show-me-your-work catch me up on the night`, then delete the automation. Done when the list shows nothing for this task and the audit names the finish state.
+
 Next: [Steer with principle names](./08-principles.md).

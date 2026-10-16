@@ -106,7 +106,7 @@ You get an answer, a prompt to send, and a link to the source. Nothing runs unti
 im going to bed, keep going autonomously until every fixture passes. do not stop. keep a decision log i can audit in the morning.
 ```
 
-The full contract is on the [overnight page](./07-overnight.md). The short form works once the task and finish condition are already in the conversation.
+The full contract is on the [overnight page](./07-overnight.md). The [long-run recipes](./07-overnight.md#long-run-recipes) section there covers the loop mechanisms that carry a night — workflow self-loops, stop-hook rounds, cron wakes. The short form works once the task and finish condition are already in the conversation.
 
 ## Redirect a drifting run
 
