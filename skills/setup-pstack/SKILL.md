@@ -73,10 +73,21 @@ interrogate reviewers: inherit-parent
 
 Then generate a preset agent file `~/.zcode/agents/pstack-<role>.md` for every role pinned to a real model except the panel roles, whose lists name models directly. The preset name is `pstack-` plus the role line lowercased, spaces and commas as hyphens (`reflect judgment, divergent, synthesizer` → `pstack-reflect-judgment-divergent-synthesizer`). Give it the model in `model` and, when the model has levels, its level in `thoughtLevel`, and the body of pstack's `agents/poteto-agent.md` verbatim with the preset name in `name`. Delete any preset whose role is no longer pinned. Preset files apply to new sessions.
 
-### 6. Confirm
+### 6. Refresh saved panel workflows
 
-Tell the user the file was written and that skills read it at spawn time, and that new preset agent files apply to new sessions. Re-running this skill updates both.
+The panel skills save global workflows — `~/.zcode/workflows/pstack-arena.dwf.ts`, `pstack-swarm.dwf.ts`, `pstack-interrogate.dwf.ts` — and a saved script pins the model table of the run that saved it: the workflow compiler rejects runtime-string model pins, so a models.md change strands the saved copies on the old panel. After writing models.md, detect and refresh them.
 
-### 7. Offer a verification skill (optional)
+Read each of the three files that exists; a name with no file was never saved, and saving stays the user's decision. Detection is grep and a set comparison on the file text — load nothing yet. Each workflow serves rows of the file just written: `pstack-arena` serves `arena runners`, `arena cross-judge pool`, and `architect runners` (architect re-runs the arena workflow on its own runners line); `pstack-swarm` serves `swarm workers`; `pstack-interrogate` serves `interrogate reviewers`. Normalize each row entry to the saved literal's spelling: `providerId/modelId@<level>` becomes `providerId/modelId$<level>`, `inherit-parent` stays an alias. A file is fresh when its embedded evidence matches the rows it serves:
+
+- Every served row `inherit-parent` — fresh iff the file carries the inherit-only guard (a runtime `throw` on any non-`inherit-parent` entry) and no `model("...")` or `model: "..."` literal.
+- A served row pins a real model — fresh iff the file's set of `model("...")` and `model: "..."` literals equals the normalized set of real models in the served rows.
+
+Regenerate each stale file: load the `dynamic-workflows` skill (SaveWorkflow refuses until it is loaded in the session), rebuild the script per the owning panel skill's save section, and save under the same name, global scope — a same-name save replaces. Each overwrite asks the user, as any save does. If SaveWorkflow is refused with the skill-gate error (a mid-session compaction can close it), reload the `dynamic-workflows` skill and retry once. A save still refused — headless with no one to confirm — leaves that workflow stale: report it and continue.
+
+### 7. Confirm
+
+Tell the user the file was written and that skills read it at spawn time, and that new preset agent files apply to new sessions. Re-running this skill updates both. Also name each saved panel workflow as detected fresh, regenerated, or left stale by a refused save.
+
+### 8. Offer a verification skill (optional)
 
 Check whether the project has a way to drive the real app for proof (a `verify-*` skill, or an existing harness). If not, offer once: "want a project-local verification skill, so agents can drive the app the way a user does and prove changes work? I can generate one with /pstack-create-verification-skill." On yes, invoke `/pstack-create-verification-skill` (resolves wherever pstack is installed: workspace, user, or plugin). On no, move on without pushing.
