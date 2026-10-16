@@ -48,7 +48,23 @@ curl -fsSL https://raw.githubusercontent.com/ChHsiching/pstack-zcode/main/agents
 ## known limitations
 
 - benny's automations fire only while your machine and ZCode are awake; a firing missed while asleep is skipped, not backfilled.
-- there is no persistent mode. `/pstack-poteto-mode` attaches to the task you type it on, so start each task with it.
+- there is no persistent mode by default. `/pstack-poteto-mode` attaches to the task you type it on, so start each task with it. an [opt-in resident hook](#resident-mode-optional) can carry it across sessions.
+
+## resident mode (optional)
+
+nothing installs a persistent mode by default; this package is opt-in and lives outside the skills collection. from a checkout of this repo, one line registers a SessionStart hook in your user-level config only (`~/.zcode/cli/config.json`, merged without touching your other keys):
+
+```bash
+node scripts/resident/install.mjs
+```
+
+one line removes it again:
+
+```bash
+node scripts/resident/install.mjs --remove
+```
+
+cost: each new session in a project that has poteto-mode installed starts with a condensed summary injected, about 300 tokens; projects without poteto-mode pay only a fast directory probe. config snapshots at session start, so start a fresh session after installing or removing. decision record: [ADR-0009](./docs/adr/0009-resident-mode-opt-in.md).
 
 ## get started
 
