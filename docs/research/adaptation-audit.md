@@ -110,6 +110,6 @@
 
 1. **白名单放行 13 条**（`scripts/cursor-residue-allowlist.txt`，每条带一行理由；lint 对无匹配条目直接 fail，故不可能存在过期条目）：调研文档引述源材料、README 差异表点名被换机制、recipes 图片 alt、ADR-0009 决策语境（#20）、GLOSSARY avoid-list ×2、07-overnight 武装短语（#23）、make-bot-ui ×2（ADR-0007 搁置）、watch-pr 的 Bugbot 字样、autopilot 与 check-plan 的 /loop 字样（ADR-0006，共 3 条）。第二轮净变化：#17 删 2（worktree-audit 转录目录，机制已死）、#20 与 #23 各加 1。
 2. recipes 页一处图片 alt 文本仍写 /loop（上游图片本身画着它，改 alt 反而失真）。
-3. **session-store helper 的文档调用路径按写法不可达**（独立复审发现，中危）：`python ../poteto-mode/scripts/session-store.py` 以工作区根为 cwd 解析不到安装位置（技能实际装在 `~/.zcode/skills/`）；fail-closed 语义保住了正确性，但每次都降级为问用户 id，列表功能实际不可用。待修：改为写明绝对安装路径，或从技能列表的 `(file: …)` 项解析（recall/automate-me/session-pickup 三处同病）。
-4. **resident 安装器 `--remove` 不回滚自己加进既有 hooks 对象的 `hooks.enabled: true`**（独立复审发现，低危；空骨架场景已处理）。文档语义下用户级 hooks 需 enabled:true 才生效，"移除"后此前惰性的 hooks 可能被激活。待修：安装时记录是否由安装器置位，--remove 时一并回滚。
+3. **session-store helper 的文档调用路径按写法不可达**（独立复审发现，中危；**已修**）：原落地文本写 `python ../poteto-mode/scripts/session-store.py`（相对工作区根解析不到安装位置），fail-closed 保住正确性但列表功能实际不可用。修复：三处（recall/automate-me/session-pickup）改为锚定「本会话技能清单所示 pstack-poteto-mode 目录」，并给出 repo/项目级/全局三种拼法；两种布局拼写均实测可跑（repo 根与模拟 `~/.zcode/skills` 安装各一次，列表结果一致）。
+4. **resident 安装器 `--remove` 不回滚自己加进既有 hooks 对象的 `hooks.enabled: true`**（独立复审发现，低危；**已修**）：安装置位时现在写 sidecar（`~/.zcode/cli/pstack-resident.state.json`）记录，`--remove` 按记录回滚（沙箱实测：潜伏 hooks 装后激活、卸后回到潜伏且配置逐键还原；空家目录装卸后 config 归 `{}`；显式 `enabled:false` 全程不动）。已知边界：装后再手动自置 `true` 的用户在卸载时会被一并回滚，卸载输出有提示。
 5. 3 处"有意修正"（改名时顺带统一 kebab/冠词），已在票#3 记录。
