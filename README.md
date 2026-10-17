@@ -55,19 +55,9 @@ the script installs into `~/.zcode/agents/` and honors `$HOME`, so `HOME=<tempdi
 
 ## resident mode (optional)
 
-nothing installs a persistent mode by default; this package is opt-in and lives outside the skills collection. from a checkout of this repo, one line registers a SessionStart hook in your user-level config only (`~/.zcode/cli/config.json`, merged without touching your other keys):
+nothing installs a persistent mode by default; resident mode is a separate, opt-in ZCode plugin ([`plugins/pstack-resident`](./plugins/pstack-resident/)) — the skills CLI cannot carry hooks, so the plugin is the distribution vehicle. from a checkout of this repo, add the local marketplace directory `plugins/` via **Plugin Marketplace → Add → Add Plugin Marketplace**, then install **pstack-resident** from it (Personal → dev market → Install). Installing the plugin is the whole opt-in; removing it in **Settings → Plugins** is the whole opt-out. No config surgery either way.
 
-```bash
-node scripts/resident/install.mjs
-```
-
-one line removes it again:
-
-```bash
-node scripts/resident/install.mjs --remove
-```
-
-cost: each new session in a project that has poteto-mode installed starts with a condensed summary injected, about 300 tokens; projects without poteto-mode pay only a fast directory probe. config snapshots at session start, so start a fresh session after installing or removing. decision record: [ADR-0009](./docs/adr/0009-resident-mode-opt-in.md).
+cost: each new session in a project that has poteto-mode installed starts with a condensed summary injected, about 300 tokens; projects without poteto-mode pay only a fast directory probe. the hook always exits 0 and cannot block or fail a session. config snapshots at session start, so start a fresh session after installing or removing. decision record: [ADR-0009](./docs/adr/0009-resident-mode-opt-in.md).
 
 ## explicit-only by command shim (optional)
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 # Resident-summary anchor lint: the condensed summary in
-# scripts/resident/resident-summary.md is a second text beside
+# plugins/pstack-resident/resident-summary.md is a second text beside
 # skills/poteto-mode/SKILL.md. This check pins the summary's structural
 # anchors to that file so the two cannot drift silently: every skill
 # reference the summary carries must resolve in the skill file, and a
@@ -17,7 +17,7 @@ export MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*'
 
 cd "$(git rev-parse --show-toplevel)"
 
-summary=scripts/resident/resident-summary.md
+summary=plugins/pstack-resident/resident-summary.md
 skill=skills/poteto-mode/SKILL.md
 
 [ -f "$summary" ] || { echo "resident-anchor: missing $summary"; exit 1; }

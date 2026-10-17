@@ -1,0 +1,20 @@
+{
+  "name": "pstack-resident",
+  "version": "0.1.0",
+  "description": "Opt-in resident mode for pstack-zcode: a SessionStart hook that injects the condensed poteto-mode summary into sessions of projects where poteto-mode is installed. Installing this plugin is the whole opt-in; sessions in other projects get nothing.",
+  "description_i18n": {
+    "zh-CN": "pstack-zcode 的常驻模式（可选）：SessionStart 钩子向装有 poteto-mode 的项目的会话注入精简纪律摘要。安装本插件即完成 opt-in；其他项目的会话零注入。"
+  },
+  "author": {
+    "name": "ChHsiching",
+    "url": "https://github.com/ChHsiching/pstack-zcode"
+  },
+  "keywords": [
+    "pstack",
+    "poteto-mode",
+    "resident",
+    "session-start",
+    "hook"
+  ],
+  "hooks": "./hooks/hooks.json"
+}

@@ -1,15 +1,23 @@
 #!/usr/bin/env node
-// SessionStart hook for resident mode (ADR-0009, opt-in only).
-// Emits the condensed poteto-mode summary as additionalContext when the
-// session's directory has poteto-mode installed; prints nothing otherwise.
-// Diagnostics go to stderr; the script always exits 0 because a SessionStart
-// hook must never make noise or block a session.
+// SessionStart hook for pstack-resident (ADR-0009, opt-in by installing
+// this plugin). Emits the condensed poteto-mode summary as
+// additionalContext when the session's directory has poteto-mode
+// installed; prints nothing otherwise. Diagnostics go to stderr; the
+// script always exits 0 because a SessionStart hook must never make
+// noise or block a session.
+//
+// Protocol (ZCode): read one JSON event object from stdin, write one
+// JSON object to stdout (must start with `{`).
+//
+// Manual smoke test:
+//   printf '%s\n' '{"hook_event_name":"SessionStart","source":"startup","cwd":"<project>"}' \
+//     | node hooks/session-start.mjs
 
 import { readFileSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const summaryPath = join(dirname(fileURLToPath(import.meta.url)), "resident-summary.md");
+const summaryPath = join(dirname(fileURLToPath(import.meta.url)), "..", "resident-summary.md");
 
 // Install locations of poteto-mode, probed from the session cwd upward.
 const SKILL_SUFFIXES = [
@@ -72,10 +80,10 @@ readStdin((data) => {
   try {
     summary = readFileSync(summaryPath, "utf8");
   } catch (error) {
-    console.error(`resident inject: cannot read ${summaryPath}: ${error.message}`);
+    process.stderr.write(`[pstack-resident] cannot read ${summaryPath}: ${error.message}\n`);
     return;
   }
-  console.error(`resident inject: poteto-mode found at ${skillFile}`);
+  process.stderr.write(`[pstack-resident] poteto-mode found at ${skillFile}\n`);
   process.stdout.write(
     JSON.stringify({
       hookSpecificOutput: {
