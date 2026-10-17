@@ -73,7 +73,7 @@ skills: pstack-poteto-help
 $ARGUMENTS
 ```
 
-the file name is the command name (lowercase, hyphens, at most 64 characters); frontmatter values stay on one line; `$ARGUMENTS` carries what you type after the slash. swap in any skill name. full mechanics and sources: [docs/research/skill-auto-invocation-controls.md](./docs/research/skill-auto-invocation-controls.md).
+the file name is the command name (lowercase, hyphens, at most 64 characters); frontmatter values stay on one line; `$ARGUMENTS` carries what you type after the slash. swap in any skill name.
 
 ## get started
 

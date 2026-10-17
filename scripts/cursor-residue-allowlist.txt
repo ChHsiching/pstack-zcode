@@ -2,8 +2,6 @@
 # The path is a glob (* crosses /); the token is one from the lint's registry or *.
 # An entry with no matching occurrence is stale and fails the lint.
 
-# ZCode-side research quoting the Cursor mechanisms it maps; source material, never user-facing
-docs/research/* :: * :: adaptation research quoting the Cursor mechanism under analysis as source material
 
 # README's differences table names the Cursor mechanisms pstack-zcode swaps, by design
 README.md :: * :: differences table names the Cursor mechanisms pstack-zcode swaps for ZCode equivalents
