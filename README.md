@@ -36,15 +36,18 @@ the script installs into `~/.zcode/agents/` and honors `$HOME`, so `HOME=<tempdi
 
 ## differences from cursor pstack
 
+the skill stack itself is upstream pstack, untouched in behavior: same 54 skills, same routing, same playbooks. what differs is the platform substrate underneath, and every difference is one of the rows below — nothing else was changed, added, or dropped (the full change audit against the upstream baseline lives in the issue trail of rounds 1 and 2).
+
 | cursor pstack | pstack-zcode |
 |---|---|
-| `/add-plugin pstack` installs a plugin | `npx skills add ChHsiching/pstack-zcode` installs the skills collection |
+| `/add-plugin pstack` installs a plugin | two install routes: the **pstack-zcode full-collection plugin** (marketplace `ChHsiching/pstack-zcode`, everything in one install) or `npx skills add ChHsiching/pstack-zcode` (skills only) |
 | subagents ship inside the plugin | the two agent files are fetched into `~/.zcode/agents/` by one script with a self-check |
 | skills invoke as `/poteto-mode`, `/how`, … | every skill carries a `pstack-` prefix: `/pstack-poteto-mode`, `/pstack-how`, … |
+| model roles default to a dual-model panel (opus + grok) | with no configuration every role inherits the session model — the machine's models are unknown at install time; setup-pstack offers a two-family panel when it detects one |
 | model roles live in a cursor rule (`~/.cursor/rules/pstack-models.mdc`) | model roles live in a data file (`~/.zcode/pstack/models.md`) read at spawn time; with no file, every role runs on the session model |
 | panels spawn through the Task tool with `subagent_type` | panels fan out through dynamic workflows, one agent per entry with its own model and reasoning level |
 | orchestrate and autopilot nest subagents three deep | orchestration is workflow topology: the script queues, spawns, and gates; no agent nests |
-| a custom mode keeps `/poteto-mode` on across turns | type `/pstack-poteto-mode` at the start of each task |
+| a custom mode keeps `/poteto-mode` on across turns | type `/pstack-poteto-mode` at the start of each task; an opt-in resident toggle (plugin route) can carry it across sessions |
 | cursor's `/loop` re-wakes a run | long runs follow a documented loop recipe: workflow self-loop, stop-hook rounds, or a cron wake ([overnight guide](./docs/guide/07-overnight.md)) |
 | cursor Projects host standing coordinators in the cloud | orchestrate runs one coordinator chat locally over a workflow |
 | cloud subagents give each parallel task its own VM | local worktrees give each parallel task its own checkout |
