@@ -8,6 +8,7 @@
       "version": "0.1.2",
       "description": "The whole pstack collection for ZCode: all 54 skills plus an optional poteto-mode summary hook, off by default. One install carries everything.",
       "displayName": "pstack-zcode",
+      "icon": "https://raw.githubusercontent.com/ChHsiching/pstack-zcode/main/assets/logo.png",
       "category": "developer-tools"
     }
   ]
