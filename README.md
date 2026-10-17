@@ -24,7 +24,7 @@ npx skills add ChHsiching/pstack-zcode -g -a zcode -y
 
 the [skills CLI](https://github.com/vercel-labs/skills) installs all skills into `~/.zcode/skills/` and `~/.agents/skills/`. skills load in new ZCode sessions, so start a fresh session after installing. update with `npx skills update -g`, remove with `npx skills remove`. the skills CLI cannot carry hooks, so this route has no [summary hook](#poteto-mode-summary); only the plugin route has it.
 
-on both routes the two subagents ship outside the collection. one line fetches both from this repo's raw URLs, self-checks them, and exits non-zero on any miss. re-runs install nothing when the files are identical:
+the plugin route also ships the two subagents; they load as `pstack-zcode:poteto-agent` and `pstack-zcode:comment-sicko`. on the skills route the skills CLI does not install agent files, so one line fetches both from this repo's raw URLs, self-checks them, and exits non-zero on any miss. re-runs install nothing when the files are identical:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ChHsiching/pstack-zcode/main/scripts/install-agents.sh | sh
@@ -39,7 +39,7 @@ the skill stack is upstream pstack, unchanged in behavior. every difference is a
 | cursor pstack | pstack-zcode |
 |---|---|
 | `/add-plugin pstack` installs a plugin | install the **pstack-zcode** plugin from the marketplace `ChHsiching/pstack-zcode`, or run `npx skills add ChHsiching/pstack-zcode` for skills only |
-| subagents ship inside the plugin | the two agent files are fetched into `~/.zcode/agents/` by one script with a self-check |
+| subagents ship inside the plugin | the plugin route ships them the same way; the skills route fetches them into `~/.zcode/agents/` with one self-checking script |
 | skills invoke as `/poteto-mode`, `/how`, … | every skill carries a `pstack-` prefix: `/pstack-poteto-mode`, `/pstack-how`, … |
 | model roles default to a two-model panel, opus and grok | unconfigured roles inherit the session model; setup-pstack offers a two-family panel when the machine has two model families |
 | model roles live in a cursor rule (`~/.cursor/rules/pstack-models.mdc`) | model roles live in a data file (`~/.zcode/pstack/models.md`) read at spawn time; with no file, every role runs on the session model |
