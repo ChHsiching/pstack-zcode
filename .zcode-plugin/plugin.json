@@ -1,7 +1,7 @@
 {
   "name": "pstack-zcode",
-  "version": "0.1.0",
-  "description": "The complete pstack collection for ZCode (Lauren @poteto's workflow, adapted): all 54 skills plus an optional resident-mode SessionStart hook, off by default. Installing this plugin installs everything; the npx skills route stays available for skills-only installs.",
+  "version": "0.1.1",
+  "description": "The whole pstack collection for ZCode, adapted from Lauren @poteto's workflow: all 54 skills plus an optional resident-mode SessionStart hook, off by default. One install carries everything. npx skills add stays available for a skills-only install.",
   "author": {
     "name": "ChHsiching",
     "url": "https://github.com/ChHsiching/pstack-zcode"
@@ -16,8 +16,8 @@
   "hooks": "./hooks/hooks.json",
   "userConfig": {
     "residentSummary": {
-      "title": "Resident mode (poteto-mode summary)",
-      "description": "When on, every new session starts with the condensed poteto-mode summary injected (~300 tokens). Off by default; the npx skills route never injects.",
+      "title": "Resident mode",
+      "description": "When on, every new session starts with the condensed poteto-mode summary, about 300 tokens. Off by default.",
       "type": "boolean",
       "default": false
     }

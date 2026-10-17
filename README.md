@@ -14,19 +14,17 @@ fork it. improve it. make it yours. PRs are welcome!
 
 ## install
 
-two coherent routes — pick one (ADR-0012). pstack upstream ships as one whole plugin; the full-collection plugin mirrors that, and the skills route stays available with its own optional hook add-on:
+**the plugin route installs everything.** add this repository as a plugin marketplace with **Plugin Marketplace → Add → Add Plugin Marketplace** and `ChHsiching/pstack-zcode`, then install **pstack-zcode**. one plugin carries all 54 skills plus the [resident mode](#resident-mode) toggle. a local checkout's root directory works as the marketplace path too. update by refreshing the market; remove in **Settings → Plugins**. plugin skills load under a `pstack-zcode:` namespace and bare names still work.
 
-**plugin route (everything in one install).** add this repository as a plugin marketplace (**Plugin Marketplace → Add → Add Plugin Marketplace**, `ChHsiching/pstack-zcode` or the repo URL; a local checkout's root directory works too), then install **pstack-zcode (full collection)** from it. that one plugin carries all 54 skills plus the optional [resident mode](#resident-mode-optional) as a settings toggle. update by refreshing the market; remove in **Settings → Plugins**. plugin skills load namespaced (`pstack-zcode:<name>`, bare names still loadable) and do not dual-install to `~/.agents/skills`.
-
-**skills route (skills via npx; hook as an optional plugin add-on).** one command, in a terminal:
+**the skills route installs skills only.** one command, in a terminal:
 
 ```bash
 npx skills add ChHsiching/pstack-zcode -g -a zcode -y
 ```
 
-the [skills CLI](https://github.com/vercel-labs/skills) installs all skills into `~/.zcode/skills/` (global scope) and `~/.agents/skills/`. skills load in new ZCode sessions, so start a fresh session after installing. update with `npx skills update -g`, remove with `npx skills remove`. want [resident mode](#resident-mode-optional) on this route? install the small **pstack resident (skills route)** plugin from the same marketplace — the skills CLI cannot carry hooks, so the hook rides as that one-plugin add-on.
+the [skills CLI](https://github.com/vercel-labs/skills) installs all skills into `~/.zcode/skills/` and `~/.agents/skills/`. skills load in new ZCode sessions, so start a fresh session after installing. update with `npx skills update -g`, remove with `npx skills remove`. for [resident mode](#resident-mode) on this route, install the small **pstack-resident** plugin from the same marketplace, because the skills CLI cannot carry hooks.
 
-on both routes the two subagents ship outside the collection — the skills CLI does not install agent files, and plugins do not either. one line fetches both from this repo's raw URLs, self-checks them (frontmatter parses, names intact), and exits non-zero on any miss. re-runs install nothing when the files are identical:
+on both routes the two subagents ship outside the collection. one line fetches both from this repo's raw URLs, self-checks them, and exits non-zero on any miss. re-runs install nothing when the files are identical:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ChHsiching/pstack-zcode/main/scripts/install-agents.sh | sh
@@ -36,18 +34,18 @@ the script installs into `~/.zcode/agents/` and honors `$HOME`, so `HOME=<tempdi
 
 ## differences from cursor pstack
 
-the skill stack itself is upstream pstack, untouched in behavior: same 54 skills, same routing, same playbooks. what differs is the platform substrate underneath, and every difference is one of the rows below — nothing else was changed, added, or dropped (the full change audit against the upstream baseline lives in the issue trail of rounds 1 and 2).
+the skill stack is upstream pstack, unchanged in behavior. every difference is a row in this table. the audit trail for every change is in the issue tracker.
 
 | cursor pstack | pstack-zcode |
 |---|---|
-| `/add-plugin pstack` installs a plugin | two install routes: the **pstack-zcode full-collection plugin** (marketplace `ChHsiching/pstack-zcode`, everything in one install) or `npx skills add ChHsiching/pstack-zcode` (skills only) |
+| `/add-plugin pstack` installs a plugin | install the **pstack-zcode** plugin from the marketplace `ChHsiching/pstack-zcode`, or run `npx skills add ChHsiching/pstack-zcode` for skills only |
 | subagents ship inside the plugin | the two agent files are fetched into `~/.zcode/agents/` by one script with a self-check |
 | skills invoke as `/poteto-mode`, `/how`, … | every skill carries a `pstack-` prefix: `/pstack-poteto-mode`, `/pstack-how`, … |
-| model roles default to a dual-model panel (opus + grok) | with no configuration every role inherits the session model — the machine's models are unknown at install time; setup-pstack offers a two-family panel when it detects one |
+| model roles default to a two-model panel, opus and grok | unconfigured roles inherit the session model; setup-pstack offers a two-family panel when the machine has two model families |
 | model roles live in a cursor rule (`~/.cursor/rules/pstack-models.mdc`) | model roles live in a data file (`~/.zcode/pstack/models.md`) read at spawn time; with no file, every role runs on the session model |
 | panels spawn through the Task tool with `subagent_type` | panels fan out through dynamic workflows, one agent per entry with its own model and reasoning level |
 | orchestrate and autopilot nest subagents three deep | orchestration is workflow topology: the script queues, spawns, and gates; no agent nests |
-| a custom mode keeps `/poteto-mode` on across turns | type `/pstack-poteto-mode` at the start of each task; an opt-in resident toggle (plugin route) can carry it across sessions |
+| a custom mode keeps `/poteto-mode` on across turns | type `/pstack-poteto-mode` at the start of each task; the plugin adds a resident toggle, off by default |
 | cursor's `/loop` re-wakes a run | long runs follow a documented loop recipe: workflow self-loop, stop-hook rounds, or a cron wake ([overnight guide](./docs/guide/07-overnight.md)) |
 | cursor Projects host standing coordinators in the cloud | orchestrate runs one coordinator chat locally over a workflow |
 | cloud subagents give each parallel task its own VM | local worktrees give each parallel task its own checkout |
@@ -56,17 +54,17 @@ the skill stack itself is upstream pstack, untouched in behavior: same 54 skills
 ## known limitations
 
 - benny's automations fire only while your machine and ZCode are awake; a firing missed while asleep is skipped, not backfilled.
-- there is no persistent mode by default. `/pstack-poteto-mode` attaches to the task you type it on, so start each task with it. an [opt-in resident hook](#resident-mode-optional) can carry it across sessions.
-- there is no explicit-only switch. ZCode ignores `disable-model-invocation` — every skill that ships it keeps it: a hard gate on cursor and claude code, ignored here — and `when_to_use` is soft guidance sharing one 250-character injection window with `description`, which these skills' long descriptions leave mostly truncated away. on a machine with 200+ installed skills (the one the research measured) the whole list drops to names-only past the 20,000-character metadata budget, and no wording is visible at all; the knob is `skills.metadataBudget` in `~/.zcode/cli/config.json`. the hard equivalent is a [project command shim](#explicit-only-by-command-shim-optional).
-- make-bot-ui's webhook wake has no ZCode equivalent (no hosted endpoint, no routine turn); the owner decided **not to build** any route (2026-10-17) — every candidate execution end spawns the undocumented headless entry, and anything that must actively wake ZCode is parked for now. the skill stays in the collection, dormant: [#26](https://github.com/ChHsiching/pstack-zcode/issues/26).
+- there is no persistent mode by default. `/pstack-poteto-mode` attaches to the task you type it on, so start each task with it. an [opt-in resident hook](#resident-mode) can carry it across sessions.
+- there is no explicit-only switch. ZCode ignores `disable-model-invocation`, so every skill keeps the field and it gates nothing here. `when_to_use` is soft guidance sharing one 250-character injection window with `description`, and these skills' long descriptions leave it mostly truncated away. on a machine with 200+ installed skills, the one the research measured, the whole list drops to names-only past the 20,000-character metadata budget and no wording is visible at all. the knob is `skills.metadataBudget` in `~/.zcode/cli/config.json`. the hard equivalent is a [project command shim](#explicit-only-by-command-shim).
+- make-bot-ui's webhook wake has no ZCode equivalent. the owner decided in october 2026 not to build any route: every candidate spawns the undocumented headless entry, and anything that must actively wake ZCode stays parked. the skill stays in the collection, dormant: [#26](https://github.com/ChHsiching/pstack-zcode/issues/26).
 
-## resident mode (optional)
+## resident mode
 
-nothing installs a persistent mode by default. **plugin route:** the **Resident mode (poteto-mode summary)** toggle in the pstack-zcode plugin's settings — off by default; flip it on and every new session starts with the condensed poteto-mode summary injected (~300 tokens). **skills route:** install the small **pstack resident (skills route)** plugin from the same marketplace; it injects only where poteto-mode is reachable (project-level or global skills install). off (or neither installed) pays nothing. the hooks always exit 0 and cannot block or fail a session; uninstalling the plugin, or flipping the toggle back, ends it — no config surgery either way. config snapshots at session start, so start a fresh session after changing anything. decision records: [ADR-0009](./docs/adr/0009-resident-mode-opt-in.md), [ADR-0012](./docs/adr/0012-one-plugin-whole-collection.md).
+nothing resident runs by default. on the plugin route, the **Resident mode** toggle in the pstack-zcode plugin's settings turns it on, and every new session starts with the condensed poteto-mode summary, about 300 tokens. on the skills route, install the **pstack-resident** plugin from the same marketplace for the same effect, limited to sessions where poteto-mode is reachable. the hook always exits 0 and cannot block a session. turn the toggle off or remove the plugin and it ends, with no config surgery. start a fresh session after changing anything. decision records: [ADR-0009](./docs/adr/0009-resident-mode-opt-in.md), [ADR-0012](./docs/adr/0012-one-plugin-whole-collection.md).
 
-## explicit-only by command shim (optional)
+## explicit-only by command shim
 
-commands fire only when you type `/name` and never enter the model's skill list, so a command is the hard explicit-only equivalent ZCode does have. a command's `skills:` frontmatter auto-mounts skill bodies, which turns the shim into a command shell with the skill as its body — the trade is losing the Skill tool's on-demand loading. to gate `/pstack-poteto-help`, save this as `<repo>/.zcode/commands/pstack-poteto-help.md`:
+commands fire only when you type `/name` and never enter the model's skill list, so a command is the hard explicit-only equivalent ZCode does have. a command's `skills:` frontmatter auto-mounts skill bodies, which turns the shim into a command shell with the skill as its body. the trade is losing the Skill tool's on-demand loading. to gate `/pstack-poteto-help`, save this as `<repo>/.zcode/commands/pstack-poteto-help.md`:
 
 ```markdown
 ---
@@ -76,7 +74,7 @@ skills: pstack-poteto-help
 $ARGUMENTS
 ```
 
-the file name is the command name (lowercase, hyphens, at most 64 characters); frontmatter values stay on one line; `$ARGUMENTS` carries what you type after the slash. swap in any skill name.
+the file name is the command name, lower-case with hyphens, at most 64 characters. frontmatter values stay on one line. `$ARGUMENTS` carries what you type after the slash. swap in any skill name.
 
 ## get started
 

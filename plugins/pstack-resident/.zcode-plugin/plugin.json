@@ -1,7 +1,7 @@
 {
   "name": "pstack-resident",
-  "version": "0.1.2",
-  "description": "Standalone resident-mode hook for pstack-zcode users who installed the skills via npx skills add: a SessionStart hook injecting the condensed poteto-mode summary into sessions where poteto-mode is reachable (project-level install in the tree, or a global install under the home directory). Install this only alongside the skills route; the pstack-zcode full-collection plugin already carries this hook behind a settings toggle.",
+  "version": "0.1.3",
+  "description": "The resident-mode hook alone, for users who installed the pstack skills with npx. A SessionStart hook injects the condensed poteto-mode summary into sessions where poteto-mode is reachable, whether installed in the project tree or globally under the home directory. Skip this if you installed the pstack-zcode plugin, which carries the same hook behind a settings toggle.",
   "author": {
     "name": "ChHsiching",
     "url": "https://github.com/ChHsiching/pstack-zcode"

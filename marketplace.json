@@ -1,21 +1,21 @@
 {
   "name": "pstack-zcode",
-  "description": "Optional add-ons and full-collection distribution for pstack-zcode — the ZCode adaptation of Lauren @poteto's pstack workflow.",
+  "description": "Plugins for pstack-zcode, the ZCode adaptation of Lauren @poteto's pstack workflow.",
   "plugins": [
     {
       "name": "pstack-zcode",
       "source": ".",
-      "version": "0.1.0",
-      "description": "The complete pstack collection for ZCode: all 54 skills plus an optional resident-mode SessionStart hook, off by default. Installing this plugin installs everything.",
-      "displayName": "pstack-zcode (full collection)",
+      "version": "0.1.1",
+      "description": "The whole pstack collection for ZCode: all 54 skills plus an optional resident-mode SessionStart hook, off by default. One install carries everything.",
+      "displayName": "pstack-zcode",
       "category": "developer-tools"
     },
     {
       "name": "pstack-resident",
       "source": "./plugins/pstack-resident",
-      "version": "0.1.2",
-      "description": "Standalone resident-mode hook for skills-route users (npx skills add): injects the condensed poteto-mode summary where poteto-mode is reachable. Skip this if you use the full-collection plugin.",
-      "displayName": "pstack resident (skills route)",
+      "version": "0.1.3",
+      "description": "The resident-mode hook alone, for users who installed the skills with npx. Injects the condensed poteto-mode summary where poteto-mode is reachable. Skip this if you installed the pstack-zcode plugin.",
+      "displayName": "pstack-resident",
       "category": "productivity"
     }
   ]
