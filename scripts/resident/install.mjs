@@ -3,14 +3,18 @@
 // Writes only the user-level config (~/.zcode/cli/config.json): merges one
 // hooks.SessionStart entry pointing at inject.mjs next to this file, keeping
 // every existing key. --remove deletes exactly that entry plus any empty
-// container the install created, restoring the prior config content.
+// container the install created, restoring the prior config content. When the
+// install had turned an absent hooks.enabled into true, --remove rolls that
+// back too — unless other hook entries remain that would then go latent; a
+// sidecar state file (~/.zcode/cli/pstack-resident.state.json) records the
+// fact across invocations and is deleted on remove.
 // Workspace-level hooks are divergently documented across sources and are
 // never written. Config snapshots at session start: start a fresh session
 // after installing or removing.
 //
 // Usage: node scripts/resident/install.mjs [--remove]
 
-import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -19,6 +23,7 @@ const injectPath = join(dirname(fileURLToPath(import.meta.url)), "inject.mjs").r
 const marker = "/scripts/resident/inject.mjs";
 const statusMessage = "pstack resident: poteto-mode summary";
 const configPath = join(homedir(), ".zcode", "cli", "config.json");
+const statePath = join(homedir(), ".zcode", "cli", "pstack-resident.state.json");
 
 const removeMode = process.argv.includes("--remove");
 
@@ -78,25 +83,36 @@ if (typeof config.hooks !== "object" || config.hooks === null) {
 }
 const hooks = config.hooks;
 const hadExplicitFalse = hooks.enabled === false;
+const addedEnabled = hooks.enabled === undefined;
 if (hooks.enabled === undefined) hooks.enabled = true;
 if (typeof hooks.events !== "object" || hooks.events === null) hooks.events = {};
 const events = hooks.events;
 if (!Array.isArray(events.SessionStart)) events.SessionStart = [];
 const kept = events.SessionStart.filter((entry) => !isOurs(entry));
 const replacedCount = events.SessionStart.length - kept.length;
+// Sidecar records that this installer turned an absent hooks.enabled into
+// true, so --remove can roll it back instead of leaving hooks that were
+// latent before the install activated.
+const stateSaysWeAddedEnabled = existsSync(statePath);
 
 if (removeMode) {
   events.SessionStart = kept;
   if (events.SessionStart.length === 0) delete events.SessionStart;
   if (Object.keys(events).length === 0) delete hooks.events;
-  // Drop the skeleton only when it is exactly the shape this installer
-  // writes ({enabled: true}, no events left). A hooks object holding any
-  // other key survives. Known edge: a pre-existing empty {enabled: true}
-  // shell is indistinguishable from our skeleton and gets removed too.
+  if (stateSaysWeAddedEnabled && hooks.enabled === true) {
+    delete hooks.enabled;
+    console.log(
+      "install: rolled back hooks.enabled this installer had set (hooks that were latent before install go latent again); set it to true again if you had enabled it yourself.",
+    );
+  }
+  // Drop containers the install created: an emptied hooks object outright,
+  // or the bare {enabled: true} skeleton when no sidecar testified.
+  if (Object.keys(hooks).length === 0) delete config.hooks;
   const onlyOurSkeleton =
     Object.keys(hooks).length === 1 && hooks.enabled === true && hooks.events === undefined;
   if (onlyOurSkeleton) delete config.hooks;
   writeAtomic(configPath, config);
+  rmSync(statePath, { force: true });
   console.log(
     replacedCount === 0
       ? `install: no resident hook found in ${configPath}; nothing changed.`
@@ -121,6 +137,9 @@ events.SessionStart = [
   },
 ];
 writeAtomic(configPath, config);
+if (addedEnabled) {
+  writeFileSync(statePath, JSON.stringify({ addedHooksEnabled: true }, null, 2) + "\n");
+}
 console.log(
   replacedCount === 0
     ? `install: registered the resident SessionStart hook in ${configPath}.`
