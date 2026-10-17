@@ -83,7 +83,7 @@
 
 | 档 | 功能 | 上游（Cursor） | pstack-zcode 现状 | 损失 | 依据 | 第二轮档位与证据 |
 |---|---|---|---|---|---|---|
-| ❌ | **make-bot-ui 按钮页** | api2.cursor.sh 托管 webhook routine | 技能休眠保留，未改造 | 功能整体不可用（除非自建公网 webhook） | ADR-0007 搁置 | **平台限制维持**：决策票 #26 已发（两路由+七问，研究默认值均标注"非既定选择"，含 none 逃生口；未拍板不实施）— #24 / cloud-execution-and-webhook-options.md |
+| ❌ | **make-bot-ui 按钮页** | api2.cursor.sh 托管 webhook routine | 技能休眠保留，未改造 | 功能整体不可用（除非自建公网 webhook） | ADR-0007 搁置 | **平台限制维持（owner 拍板不建，2026-10-17）**：两路由执行端皆依赖无头入口（非受支持 CLI），owner 否决；免无头的轮询变体亦搁置（凡需主动唤醒 ZCode 的先不做）；技能保留休眠随装随发，将来有空可深度适配 — #26 决定 / #24 / cloud-execution-and-webhook-options.md |
 | ⚠️ | **常驻模式** | Option+Enter 全程 Custom Mode | 每任务手动 `/pstack-poteto-mode` | 无"一直开着"体验 | Q8 决策 | **可选等效**：opt-in SessionStart hook 包，默认不装，一行装/一行卸；仅对装了 poteto-mode 的项目注入约 300 token 摘要，且有 CI 锚点 lint 防漂移 — #20 / ADR-0009 / sessionstart-hook-optin.md |
 | ⚠️ | **/loop 自主长跑** | Cursor 内建循环唤醒 | workflow 脚本自循环 + Stop hook 3 轮弱等价 | 长跑节奏不同 | ADR-0006 | **可选等效**：三种机制（workflow 自循环+上限 / Stop hook 三轮 / cron 唤醒）成文为长跑配方，含分段夜间组合与完成判据，锚定 /loop 1h 武装短语 — #23 / docs/guide/07-overnight.md |
 | ⚠️ | **云端并行执行** | swarm `environment:"cloud"` / Cloud Mac | 本地 actor + worktree 隔离 | 无云端算力与沙箱 | ADR-0006 | **平台限制维持＋结论注**：Actions 跑 zcode CLI 条件可行，卡点 CLI 分发+许可，默认不建（见下"平台限制注"）— cloud-execution-and-webhook-options.md §5 |
@@ -103,8 +103,8 @@
 
 ### 平台限制注（C 档结论归档）
 
-- **GitHub Actions 跑 zcode CLI：条件可行，默认不建。** 无头 `-p` 与 API-key 认证机制已实测走通；卡点为 **CLI 分发**（无官方公开渠道：npm 未发布、Releases 只有桌面安装包、SEA 走内网；需自带 bundle 或源码构建）与**许可**（Coding Plan 条款只覆盖"指定工具环境"，无头 CI 无公开裁决）。拍板入口：cloud-execution-and-webhook-options.md §5 的最小 POC 清单与 §6 决策问题 5–7。
-- **make-bot-ui 公网 webhook：待拍板。** 本地按钮页 vs Cloudflare Worker 中继两路由、七问决策清单已发为 issue #26（研究默认值标注"非既定选择"，含 none 逃生口）；未拍板前不实施。README known-limits 已指向该票。
+- **GitHub Actions 跑 zcode CLI：条件可行，默认不建。** 无头 `-p` 与 API-key 认证机制已实测走通；卡点为 **CLI 分发**（无官方公开渠道：npm 未发布、Releases 只有桌面安装包、SEA 走内网；需自带 bundle 或源码构建）与**许可**（Coding Plan 条款只覆盖"指定工具环境"，无头 CI 无公开裁决）。Owner 立场（2026-10-17，#26）：无头入口这一前提已被否决，Actions 同样暂不做；拍板入口：cloud-execution-and-webhook-options.md §5 的最小 POC 清单与 §6 决策问题 5–7。
+- **make-bot-ui 公网 webhook：owner 拍板不建（2026-10-17，#26）。** 两路由的执行端都以无头入口（`zcode.cjs -p`）spawn 进程，owner 认定那不是受支持的正常 CLI；免无头的 CronCreate 轮询变体也一并搁置（凡需主动唤醒 ZCode 的暂不做，无法以快速最小修改实现）。技能保留在集合中休眠（随装随发、惰性）；将来有空可按 #26 的调研做深度适配。README known-limits 已更新为该结论。
 
 ## 五、已知残留与让步（全量，无隐瞒；第二轮收官后）
 
