@@ -1,9 +1,10 @@
 {
-  "name": "dev-pstack-zcode-7ea45c1c",
+  "name": "pstack-zcode",
+  "description": "Optional add-ons for pstack-zcode — the ZCode adaptation of Lauren @poteto's pstack workflow. Install the skills collection separately via npx skills add; this marketplace carries what the skills CLI cannot ship (hooks-bearing plugins).",
   "plugins": [
     {
       "name": "pstack-resident",
-      "source": "./pstack-resident",
+      "source": "./plugins/pstack-resident",
       "version": "0.1.1",
       "description": "Opt-in resident mode for pstack-zcode: a SessionStart hook that injects the condensed poteto-mode summary into sessions where poteto-mode is reachable — a project-level install in the tree, or a global install under the home directory. Installing this plugin is the whole opt-in; sessions that cannot reach poteto-mode get nothing.",
       "displayName": "pstack resident",
@@ -11,8 +12,9 @@
         "zh-CN": "pstack 常驻模式"
       },
       "description_i18n": {
-        "zh-CN": "可选常驻模式：SessionStart 钩子向 poteto-mode 可达的会话（项目级或全局安装）注入精简纪律摘要，装插件即 opt-in。"
-      }
+        "zh-CN": "可选常驻模式：SessionStart 钩子向 poteto-mode 可达的会话（项目级或全局安装）注入精简纪律摘要，装插件即 opt-in；不可达的会话零注入。"
+      },
+      "category": "productivity"
     }
   ]
 }
