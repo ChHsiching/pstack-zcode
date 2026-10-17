@@ -8,12 +8,6 @@
       "version": "0.1.0",
       "description": "The complete pstack collection for ZCode: all 54 skills plus an optional resident-mode SessionStart hook, off by default. Installing this plugin installs everything.",
       "displayName": "pstack-zcode (full collection)",
-      "displayName_i18n": {
-        "zh-CN": "pstack-zcode 全家桶"
-      },
-      "description_i18n": {
-        "zh-CN": "pstack 全家桶：54 个技能 + 可选常驻模式 SessionStart 钩子（默认关闭）。装本插件即装齐全部。"
-      },
       "category": "developer-tools"
     },
     {
@@ -22,12 +16,6 @@
       "version": "0.1.2",
       "description": "Standalone resident-mode hook for skills-route users (npx skills add): injects the condensed poteto-mode summary where poteto-mode is reachable. Skip this if you use the full-collection plugin.",
       "displayName": "pstack resident (skills route)",
-      "displayName_i18n": {
-        "zh-CN": "pstack 常驻模式（npx 技能通道用）"
-      },
-      "description_i18n": {
-        "zh-CN": "npx 技能通道用户的独立常驻 hook；全家桶插件用户无需安装。"
-      },
       "category": "productivity"
     }
   ]

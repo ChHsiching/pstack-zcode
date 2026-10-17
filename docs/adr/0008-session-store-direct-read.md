@@ -6,6 +6,6 @@ History-mining surfaces (recall, automate-me, session pickup, worktree-audit's L
 
 ## Considered Options
 
-- ReadSessionContext-only (round-1 status quo) — rejected: "cannot proactively review history" stays a permanent loss (audit §四).
+- ReadSessionContext-only (round-1 status quo) — rejected: "cannot proactively review history" stays a permanent loss (audit §4).
 - Inline query snippets in each skill — rejected: the same query repeated across skills drifts; one helper is a single source of truth.
 - A repo-level `scripts/` helper — rejected: the skills CLI ships `skills/` only; an installed skill cannot reach repo files.
