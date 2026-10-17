@@ -18,22 +18,10 @@ export MSYS_NO_PATHCONV=1 MSYS2_ARG_CONV_EXCL='*'
 cd "$(git rev-parse --show-toplevel)"
 
 summary=hooks/resident-summary.md
-standalone=plugins/pstack-resident/resident-summary.md
 skill=skills/poteto-mode/SKILL.md
 
 [ -f "$summary" ] || { echo "resident-anchor: missing $summary"; exit 1; }
 [ -f "$skill" ] || { echo "resident-anchor: missing $skill"; exit 1; }
-# The standalone hook plugin ships its own copy; the two texts must stay
-# byte-identical so one edit cannot fork them.
-if [ -f "$standalone" ]; then
-	cmp -s "$summary" "$standalone" || {
-		echo "resident-anchor: $standalone differs from $summary; keep the copies identical"
-		exit 1
-	}
-else
-	echo "resident-anchor: missing $standalone"
-	exit 1
-fi
 
 status=0
 

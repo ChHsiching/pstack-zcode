@@ -1,5 +1,5 @@
 {
-  "description": "Resident mode: inject the condensed poteto-mode summary at session start, only when the user has enabled it in plugin settings.",
+  "description": "Injects the condensed poteto-mode summary at session start, only when the user has enabled it in plugin settings.",
   "hooks": {
     "SessionStart": [
       {
@@ -12,7 +12,7 @@
               "${ZCODE_PLUGIN_ROOT}/hooks/session-start.mjs"
             ],
             "timeoutMs": 5000,
-            "statusMessage": "pstack resident"
+            "statusMessage": "pstack-zcode"
           }
         ]
       }

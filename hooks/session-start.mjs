@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 // SessionStart hook for the pstack-zcode plugin (ADR-0009, ADR-0012).
-// Resident mode is a user setting, off by default: when the user turns
-// "residentSummary" on in the plugin's settings, every new session starts
-// with the condensed poteto-mode summary injected. Diagnostics go to
-// stderr; the script always exits 0 because a SessionStart hook must
+// The poteto-mode summary is a user setting, off by default: when the user
+// turns "summaryAtStart" on in the plugin's settings, every new session
+// starts with the condensed poteto-mode summary injected. Diagnostics go
+// to stderr; the script always exits 0 because a SessionStart hook must
 // never make noise or block a session.
 //
 // Protocol (ZCode): read one JSON event object from stdin, write one
 // JSON object to stdout (must start with `{`).
 //
 // Manual smoke test:
-//   ZCODE_USER_CONFIG_RESIDENTSUMMARY=true \
+//   ZCODE_USER_CONFIG_SUMMARYATSTART=true \
 //     printf '%s\n' '{"hook_event_name":"SessionStart","source":"startup"}' \
 //     | node hooks/session-start.mjs
 
@@ -49,24 +49,24 @@ function readStdin(cb) {
 // The userConfig boolean reaches hook processes through the environment
 // (the host maps config keys to ZCODE_USER_CONFIG_<KEY>); accept the
 // snake-case spelling too rather than trusting one mapping.
-function residentEnabled() {
+function summaryEnabled() {
   const v =
-    process.env.ZCODE_USER_CONFIG_RESIDENTSUMMARY ??
-    process.env.ZCODE_USER_CONFIG_RESIDENT_SUMMARY ??
-    process.env.RESIDENT_SUMMARY;
+    process.env.ZCODE_USER_CONFIG_SUMMARYATSTART ??
+    process.env.ZCODE_USER_CONFIG_SUMMARY_AT_START ??
+    process.env.SUMMARY_AT_START;
   return v === "true" || v === "1";
 }
 
 readStdin(() => {
-  if (!residentEnabled()) return; // off (the default): zero cost
+  if (!summaryEnabled()) return; // off (the default): zero cost
   let summary;
   try {
     summary = readFileSync(summaryPath, "utf8");
   } catch (error) {
-    process.stderr.write(`[pstack-resident] cannot read ${summaryPath}: ${error.message}\n`);
+    process.stderr.write(`[pstack-zcode] cannot read ${summaryPath}: ${error.message}\n`);
     return;
   }
-  process.stderr.write("[pstack-resident] resident mode on; injecting summary\n");
+  process.stderr.write("[pstack-zcode] summary at start on; injecting summary\n");
   process.stdout.write(
     JSON.stringify({
       hookSpecificOutput: {

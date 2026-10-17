@@ -8,6 +8,8 @@ Supersedes the distribution half of ADR-0003 (skills CLI remains as the skills-o
 
 **Addendum (2026-10-17, owner direction, same day):** the full-collection plugin stands — it mirrors upstream pstack, which is itself one whole plugin with no category split (the "categorization" is runtime routing, not install-time selection). But removing the standalone hook broke the skills route's access to resident mode, so the marketplace carries **two** plugins: `pstack-zcode` (full collection, skills + hook behind a default-off toggle) for the plugin route, and `pstack-resident` (hook only, gated on poteto-mode reachability since the skills arrive by another vehicle) as the skills route's optional add-on. The summary ships in both plugins; the anchor lint requires the two copies byte-identical so they cannot fork.
 
+**Addendum 2 (2026-10-17, owner direction, later the same day):** the standalone plugin is dropped — the owner judged a second plugin not worth its name and chose "one plugin only; the npx route ships no hook." The marketplace lists `pstack-zcode` alone (v0.1.2). The hook's user-facing naming also dropped the jargon: the settings toggle is "Poteto-mode summary" (`summaryAtStart`), not "resident". The anchor lint is back to pinning the single summary copy at `hooks/resident-summary.md`.
+
 ## Considered Options
 
 - Keep the standalone hook plugin beside the npx skills route — rejected: the hook only works when another vehicle delivered the skills; two installs, neither complete.
