@@ -6,6 +6,8 @@ Consequences accepted with this change: the skills-CLI dual install to `~/.agent
 
 Supersedes the distribution half of ADR-0003 (skills CLI remains as the skills-only route) and the standalone-plugin vehicle in ADR-0009's first addendum (the hook, its summary, and the anchor lint live at the repo root's `hooks/` now).
 
+**Addendum (2026-10-17, owner direction, same day):** the full-collection plugin stands — it mirrors upstream pstack, which is itself one whole plugin with no category split (the "categorization" is runtime routing, not install-time selection). But removing the standalone hook broke the skills route's access to resident mode, so the marketplace carries **two** plugins: `pstack-zcode` (full collection, skills + hook behind a default-off toggle) for the plugin route, and `pstack-resident` (hook only, gated on poteto-mode reachability since the skills arrive by another vehicle) as the skills route's optional add-on. The summary ships in both plugins; the anchor lint requires the two copies byte-identical so they cannot fork.
+
 ## Considered Options
 
 - Keep the standalone hook plugin beside the npx skills route — rejected: the hook only works when another vehicle delivered the skills; two installs, neither complete.

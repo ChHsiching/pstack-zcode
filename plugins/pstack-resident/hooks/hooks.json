@@ -1,0 +1,21 @@
+{
+  "description": "Resident mode: inject the condensed poteto-mode summary at session start, only for projects that have poteto-mode installed.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "process",
+            "command": "node",
+            "args": [
+              "${ZCODE_PLUGIN_ROOT}/hooks/session-start.mjs"
+            ],
+            "timeoutMs": 5000,
+            "statusMessage": "pstack-resident"
+          }
+        ]
+      }
+    ]
+  }
+}
