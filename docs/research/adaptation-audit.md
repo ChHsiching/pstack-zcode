@@ -84,7 +84,7 @@
 | 档 | 功能 | 上游（Cursor） | pstack-zcode 现状 | 损失 | 依据 | 第二轮档位与证据 |
 |---|---|---|---|---|---|---|
 | ❌ | **make-bot-ui 按钮页** | api2.cursor.sh 托管 webhook routine | 技能休眠保留，未改造 | 功能整体不可用（除非自建公网 webhook） | ADR-0007 搁置 | **平台限制维持（owner 拍板不建，2026-10-17）**：两路由执行端皆依赖无头入口（非受支持 CLI），owner 否决；免无头的轮询变体亦搁置（凡需主动唤醒 ZCode 的先不做）；技能保留休眠随装随发，将来有空可深度适配 — #26 决定 / #24 / cloud-execution-and-webhook-options.md |
-| ⚠️ | **常驻模式** | Option+Enter 全程 Custom Mode | 每任务手动 `/pstack-poteto-mode` | 无"一直开着"体验 | Q8 决策 | **可选等效（2026-10-17 升级为插件分发）**：opt-in ZCode 插件 `plugins/pstack-resident`（skills CLI 带不动 hook，插件装/卸即 opt-in/opt-out、零配置手术、本地 marketplace 可装）；仅对装了 poteto-mode 的项目注入约 300 token 摘要，CI 锚点 lint 防漂移 — #20 / ADR-0009 附记 / sessionstart-hook-optin.md |
+| ⚠️ | **常驻模式** | Option+Enter 全程 Custom Mode | 每任务手动 `/pstack-poteto-mode` | 无"一直开着"体验 | Q8 决策 | **可选等效（2026-10-17 升级为插件分发）**：opt-in ZCode 插件 `plugins/pstack-resident`（skills CLI 带不动 hook，插件装/卸即 opt-in/opt-out、零配置手术、本地 marketplace 可装）；poteto-mode 可达即注入约 300 token 摘要（项目级树内或全局家目录安装，显式探测、盘符无关；复审补审后修正门控），CI 锚点 lint 防漂移 — #20 / ADR-0009 附记 / sessionstart-hook-optin.md |
 | ⚠️ | **/loop 自主长跑** | Cursor 内建循环唤醒 | workflow 脚本自循环 + Stop hook 3 轮弱等价 | 长跑节奏不同 | ADR-0006 | **可选等效**：三种机制（workflow 自循环+上限 / Stop hook 三轮 / cron 唤醒）成文为长跑配方，含分段夜间组合与完成判据，锚定 /loop 1h 武装短语 — #23 / docs/guide/07-overnight.md |
 | ⚠️ | **云端并行执行** | swarm `environment:"cloud"` / Cloud Mac | 本地 actor + worktree 隔离 | 无云端算力与沙箱 | ADR-0006 | **平台限制维持＋结论注**：Actions 跑 zcode CLI 条件可行，卡点 CLI 分发+许可，默认不建（见下"平台限制注"）— cloud-execution-and-webhook-options.md §5 |
 | ⚠️ | **自动化 24/7** | Cursor Automations 云端常驻 | 本机 CronCreate；睡眠不触发、错过不补 | 离线窗口漏报 | ADR-0007（明示接受） | **平台限制维持**：睡眠不触发、错过不补照旧；云端替代路径已调研（Actions，条件可行默认不建，见下） — ADR-0007 / cloud-execution-and-webhook-options.md §5 |

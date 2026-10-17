@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 // SessionStart hook for pstack-resident (ADR-0009, opt-in by installing
 // this plugin). Emits the condensed poteto-mode summary as
-// additionalContext when the session's directory has poteto-mode
-// installed; prints nothing otherwise. Diagnostics go to stderr; the
-// script always exits 0 because a SessionStart hook must never make
+// additionalContext when poteto-mode is reachable from the session — a
+// project-level install in the session's tree, or a global install under
+// the home directory; prints nothing otherwise. Diagnostics go to stderr;
+// the script always exits 0 because a SessionStart hook must never make
 // noise or block a session.
 //
 // Protocol (ZCode): read one JSON event object from stdin, write one
@@ -14,14 +15,22 @@
 //     | node hooks/session-start.mjs
 
 import { readFileSync, statSync } from "node:fs";
+import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const summaryPath = join(dirname(fileURLToPath(import.meta.url)), "..", "resident-summary.md");
 
-// Install locations of poteto-mode, probed from the session cwd upward.
+// Project-level install locations of poteto-mode, probed from the session
+// cwd upward. The walk stops on its own; global locations are probed
+// explicitly below so behavior does not drift with the drive letter.
 const SKILL_SUFFIXES = [
   "skills/poteto-mode/SKILL.md",
+  ".zcode/skills/poteto-mode/SKILL.md",
+  ".agents/skills/poteto-mode/SKILL.md",
+];
+// Global install locations, always under the home directory.
+const GLOBAL_SUFFIXES = [
   ".zcode/skills/poteto-mode/SKILL.md",
   ".agents/skills/poteto-mode/SKILL.md",
 ];
@@ -35,9 +44,18 @@ function findPotetoMode(cwd) {
       } catch {}
     }
     const parent = dirname(dir);
-    if (parent === dir) return null;
+    if (parent === dir) break;
     dir = parent;
   }
+  // A globally installed poteto-mode is session-reachable from any project
+  // on any drive; probe the home-directory locations directly.
+  const home = homedir().replace(/\\/g, "/");
+  for (const suffix of GLOBAL_SUFFIXES) {
+    try {
+      if (statSync(join(home, suffix)).isFile()) return `${home}/${suffix}`;
+    } catch {}
+  }
+  return null;
 }
 
 function once(fn) {
@@ -75,7 +93,7 @@ readStdin((data) => {
   if (!cwd && process.env.ZCODE_PROJECT_DIR) cwd = process.env.ZCODE_PROJECT_DIR;
   if (!cwd) return; // no session directory known: stay silent
   const skillFile = findPotetoMode(cwd);
-  if (!skillFile) return; // not a poteto-mode project: zero cost
+  if (!skillFile) return; // poteto-mode not reachable: zero cost
   let summary;
   try {
     summary = readFileSync(summaryPath, "utf8");
