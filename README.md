@@ -14,15 +14,19 @@ fork it. improve it. make it yours. PRs are welcome!
 
 ## install
 
-one command, in a terminal:
+two coherent routes — pick one (ADR-0012):
+
+**plugin route (everything in one install).** add this repository as a plugin marketplace (**Plugin Marketplace → Add → Add Plugin Marketplace**, `ChHsiching/pstack-zcode` or the repo URL; a local checkout's root directory works too), then install **pstack-zcode (full collection)** from it. that one plugin carries all 54 skills plus the optional [resident mode](#resident-mode-optional) as a settings toggle. update by refreshing the market; remove in **Settings → Plugins**. plugin skills load namespaced (`pstack-zcode:<name>`, bare names still loadable) and do not dual-install to `~/.agents/skills`.
+
+**skills route (skills only, no hook ever).** one command, in a terminal:
 
 ```bash
 npx skills add ChHsiching/pstack-zcode -g -a zcode -y
 ```
 
-the [skills CLI](https://github.com/vercel-labs/skills) installs all skills into `~/.zcode/skills/` (global scope) and `~/.agents/skills/`. skills load in new ZCode sessions, so start a fresh session after installing. update with `npx skills update -g`, remove with `npx skills remove`.
+the [skills CLI](https://github.com/vercel-labs/skills) installs all skills into `~/.zcode/skills/` (global scope) and `~/.agents/skills/`. skills load in new ZCode sessions, so start a fresh session after installing. update with `npx skills update -g`, remove with `npx skills remove`. resident mode is not available on this route.
 
-the two subagents ship outside the collection, and the skills CLI does not install agent files. one line fetches both from this repo's raw URLs, self-checks them (frontmatter parses, names intact), and exits non-zero on any miss. re-runs install nothing when the files are identical:
+on both routes the two subagents ship outside the collection — the skills CLI does not install agent files, and plugins do not either. one line fetches both from this repo's raw URLs, self-checks them (frontmatter parses, names intact), and exits non-zero on any miss. re-runs install nothing when the files are identical:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ChHsiching/pstack-zcode/main/scripts/install-agents.sh | sh
@@ -55,9 +59,7 @@ the script installs into `~/.zcode/agents/` and honors `$HOME`, so `HOME=<tempdi
 
 ## resident mode (optional)
 
-nothing installs a persistent mode by default; resident mode is a separate, opt-in ZCode plugin ([`plugins/pstack-resident`](./plugins/pstack-resident/)) — the skills CLI cannot carry hooks, so the plugin is the distribution vehicle. add this repository as a plugin marketplace (**Plugin Marketplace → Add → Add Plugin Marketplace**, `ChHsiching/pstack-zcode` or the repo URL; a local checkout's root directory works too), then install **pstack-resident** from it. Installing the plugin is the whole opt-in; removing it in **Settings → Plugins** is the whole opt-out. No config surgery either way.
-
-cost: each new session where poteto-mode is reachable (a project-level install in the tree, or a global install under the home directory) starts with a condensed summary injected, about 300 tokens; sessions that cannot reach poteto-mode pay only a fast directory probe. the hook always exits 0 and cannot block or fail a session. config snapshots at session start, so start a fresh session after installing or removing. decision record: [ADR-0009](./docs/adr/0009-resident-mode-opt-in.md).
+nothing installs a persistent mode by default. on the plugin route, resident mode is the **Resident mode (poteto-mode summary)** toggle in the pstack-zcode plugin's settings — off by default; flip it on and every new session starts with the condensed poteto-mode summary injected (~300 tokens). off (or the skills-only npx route) pays nothing. the hook always exits 0 and cannot block or fail a session; uninstalling or disabling the plugin, or flipping the toggle back, ends it — no config surgery either way. config snapshots at session start, so start a fresh session after changing the toggle. decision records: [ADR-0009](./docs/adr/0009-resident-mode-opt-in.md), [ADR-0012](./docs/adr/0012-one-plugin-whole-collection.md).
 
 ## explicit-only by command shim (optional)
 

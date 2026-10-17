@@ -1,20 +1,20 @@
 {
   "name": "pstack-zcode",
-  "description": "Optional add-ons for pstack-zcode — the ZCode adaptation of Lauren @poteto's pstack workflow. Install the skills collection separately via npx skills add; this marketplace carries what the skills CLI cannot ship (hooks-bearing plugins).",
+  "description": "Optional add-ons and full-collection distribution for pstack-zcode — the ZCode adaptation of Lauren @poteto's pstack workflow.",
   "plugins": [
     {
-      "name": "pstack-resident",
-      "source": "./plugins/pstack-resident",
-      "version": "0.1.1",
-      "description": "Opt-in resident mode for pstack-zcode: a SessionStart hook that injects the condensed poteto-mode summary into sessions where poteto-mode is reachable — a project-level install in the tree, or a global install under the home directory. Installing this plugin is the whole opt-in; sessions that cannot reach poteto-mode get nothing.",
-      "displayName": "pstack resident",
+      "name": "pstack-zcode",
+      "source": ".",
+      "version": "0.1.0",
+      "description": "The complete pstack collection for ZCode: all 54 skills plus an optional resident-mode SessionStart hook, off by default. Installing this plugin installs everything.",
+      "displayName": "pstack-zcode (full collection)",
       "displayName_i18n": {
-        "zh-CN": "pstack 常驻模式"
+        "zh-CN": "pstack-zcode 全家桶"
       },
       "description_i18n": {
-        "zh-CN": "可选常驻模式：SessionStart 钩子向 poteto-mode 可达的会话（项目级或全局安装）注入精简纪律摘要，装插件即 opt-in；不可达的会话零注入。"
+        "zh-CN": "pstack 全家桶：54 个技能 + 可选常驻模式 SessionStart 钩子（默认关闭）。装本插件即装齐全部。"
       },
-      "category": "productivity"
+      "category": "developer-tools"
     }
   ]
 }

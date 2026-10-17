@@ -1,0 +1,28 @@
+{
+  "name": "pstack-zcode",
+  "version": "0.1.0",
+  "description": "The complete pstack collection for ZCode (Lauren @poteto's workflow, adapted): all 54 skills plus an optional resident-mode SessionStart hook, off by default. Installing this plugin installs everything; the npx skills route stays available for skills-only installs.",
+  "description_i18n": {
+    "zh-CN": "pstack 全家桶（Lauren @poteto 工作流的 ZCode 适配版）：54 个技能 + 可选常驻模式 SessionStart 钩子（默认关闭）。装本插件即装齐全部；只要技能的走 npx skills 通道。"
+  },
+  "author": {
+    "name": "ChHsiching",
+    "url": "https://github.com/ChHsiching/pstack-zcode"
+  },
+  "keywords": [
+    "pstack",
+    "poteto-mode",
+    "workflow",
+    "skills"
+  ],
+  "skills": "./skills",
+  "hooks": "./hooks/hooks.json",
+  "userConfig": {
+    "residentSummary": {
+      "title": "Resident mode (poteto-mode summary)",
+      "description": "When on, every new session starts with the condensed poteto-mode summary injected (~300 tokens). Off by default; the npx skills route never injects.",
+      "type": "boolean",
+      "default": false
+    }
+  }
+}
