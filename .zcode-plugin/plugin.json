@@ -1,6 +1,6 @@
 {
   "name": "pstack-zcode",
-  "version": "0.1.3",
+  "version": "0.15.26",
   "description": "The whole pstack collection for ZCode, adapted from Lauren @poteto's workflow: all 54 skills plus an optional poteto-mode summary hook, off by default. One install carries everything. npx skills add stays available for a skills-only install.",
   "author": {
     "name": "ChHsiching",
