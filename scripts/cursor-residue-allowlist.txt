@@ -22,3 +22,6 @@ skills/poteto-mode/scripts/watch-pr/* :: Bugbot :: counts review passes by Curso
 skills/poteto-mode/playbooks/autopilot-full.md :: /loop :: Cursor's /loop heartbeat has no ZCode built-in; the adapted dynamic workflow re-loops in script (ADR 0006) while the plan text keeps the upstream arming phrase
 skills/poteto-mode/scripts/check-plan.mjs :: /loop :: plan-contract marker matching the /loop 1h phrase autopilot-full.md still arms
 skills/poteto-mode/scripts/check-plan.test.ts :: /loop :: fixture for the check-plan /loop 1h marker
+
+# Upstream's Claude Code harness adapter doc quotes the Cursor names it maps; source material, never user-facing on ZCode
+docs/harness/claude-code.md :: * :: upstream's Claude Code install doc maps every Cursor mechanism to its Claude Code name; shipped verbatim per ADR-0002, not adapted surface
