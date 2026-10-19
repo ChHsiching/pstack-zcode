@@ -59,11 +59,7 @@ When you already know the workflow you want to capture:
 
 Writing a skill matches the [Authoring or modifying a skill playbook](../../skills/poteto-mode/playbooks/authoring-a-skill.md), which validates the frontmatter and links, and ships the result through the Opening a PR playbook. Agent-facing prose has a higher bar than human prose, because an unhelpful sentence becomes an instruction some future agent follows. Let the playbook hold that bar rather than writing a `SKILL.md` freehand.
 
-<<<<<<< HEAD
-Two special cases have their own generators. A skill that must drive your app and prove behavior is a verification skill, so use [`/pstack-create-verification-skill`](../../skills/create-verification-skill/SKILL.md) and [`/pstack-maintain-verification-skill`](../../skills/maintain-verification-skill/SKILL.md) instead. A skill that checks a property of your code with a model checker, a proof, or another verifier is a formal verification skill, so use [`/pstack-create-formal-verification-skill`](../../skills/create-formal-verification-skill/SKILL.md). [Verify and ship](./06-verify-and-ship.md#create-a-project-verification-skill) covers both kinds.
-=======
 Two special cases have their own generators. A skill that must drive your app and prove behavior is a verification skill, so use [`/pstack-create-verification-skill`](../../skills/create-verification-skill/SKILL.md) and [`/pstack-maintain-verification-skill`](../../skills/maintain-verification-skill/SKILL.md) instead. A skill that checks a property of your code with a model checker, a proof, or another verifier is a formal verification skill, so use [`/pstack-create-formal-verification-skill`](../../skills/create-formal-verification-skill/SKILL.md) and [`/pstack-maintain-formal-verification-skill`](../../skills/maintain-formal-verification-skill/SKILL.md). [Verify and ship](./06-verify-and-ship.md#prove-a-property-with-a-formal-verification-skill) covers both kinds.
->>>>>>> 41d0a9580b4ffa244a3d5ea38b1775c9e255819c
 
 ## Write docs to a standard with `/pstack-technical-writing`
 
