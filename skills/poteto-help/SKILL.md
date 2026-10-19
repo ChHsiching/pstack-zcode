@@ -24,7 +24,7 @@ Infer the need from the message and the conversation. A named situation, such as
 
 Check the state that changes the answer, and mention it only when it does:
 
-- No `~/.zcode/pstack/models.md` means `/pstack-setup-pstack` hasn't run for this user, so every role uses its default model.
+- No `~/.zcode/pstack/models.md` means `/pstack-setup-pstack` hasn't run for this user, so every role runs on the session model.
 - No `verify-*` skill or other app harness in the project means agents have no scripted way to drive the app. Mention `/pstack-create-verification-skill` when the question is about proving a change works.
 - No formal verification skill in the project means no property is checked past what tests reach. Mention `/pstack-create-formal-verification-skill` when the question is about a race, an invariant, or another case tests rarely hit.
 

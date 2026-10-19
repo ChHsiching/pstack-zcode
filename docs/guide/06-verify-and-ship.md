@@ -101,7 +101,7 @@ A verification skill proves the paths you drive. Some bugs live on paths nobody 
 /create-formal-verification-skill
 ```
 
-[`/create-formal-verification-skill`](../../skills/create-formal-verification-skill/SKILL.md) picks the target from the code: a promise the code makes, where a break harms users and tests rarely reach the case that breaks it. It picks the strongest target, not the easiest to verify. Name an area or a bug to start there instead:
+[`/pstack-create-formal-verification-skill`](../../skills/create-formal-verification-skill/SKILL.md) picks the target from the code: a promise the code makes, where a break harms users and tests rarely reach the case that breaks it. It picks the strongest target, not the easiest to verify. Name an area or a bug to start there instead:
 
 ```text
 /create-formal-verification-skill the job lease and retry logic. a job must never run twice at once.

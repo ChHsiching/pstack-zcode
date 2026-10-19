@@ -64,9 +64,9 @@ For a noisy report, such as a long thread or a vague bug, make the restatement t
 /pstack-poteto-mode read this thread. restate the underlying issue in your own words, in plain english. don't change any code yet.
 ```
 
-A misreading shows up in the restatement, before any code exists. Correct it there, and it costs you one message instead of one wrong fix. For the restatement alone, with no playbook, run [`/in-your-own-words`](../../skills/in-your-own-words/SKILL.md). It restates what the agent thinks your goals are and what problem you're trying to solve.
+A misreading shows up in the restatement, before any code exists. Correct it there, and it costs you one message instead of one wrong fix. For the restatement alone, with no playbook, run [`/pstack-in-your-own-words`](../../skills/in-your-own-words/SKILL.md). It restates what the agent thinks your goals are and what problem you're trying to solve.
 
-When you're unsure whether a task is aimed right, put [`/sharpen`](../../skills/sharpen/SKILL.md) in front of it:
+When you're unsure whether a task is aimed right, put [`/pstack-sharpen`](../../skills/sharpen/SKILL.md) in front of it:
 
 ```text
 /sharpen write a migration guide for the v2 config format.

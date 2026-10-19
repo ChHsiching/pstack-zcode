@@ -18,7 +18,7 @@ Mechanics first, history second. Each skill's report tells you which sources it 
 /pstack-poteto-mode read this thread. restate the underlying issue in your own words, in plain english. don't change any code yet.
 ```
 
-A misreading shows up in the restatement, where it costs one message to correct. Keep your own theory to yourself until the agent has stated its own. `/in-your-own-words` asks for the restatement alone, with no playbook.
+A misreading shows up in the restatement, where it costs one message to correct. Keep your own theory to yourself until the agent has stated its own. `/pstack-in-your-own-words` asks for the restatement alone, with no playbook.
 
 ## Aim a task before it starts
 
@@ -156,14 +156,14 @@ That's the whole prompt. [`/pstack-bro`](../../skills/bro/SKILL.md) restates the
 /ketchup
 ```
 
-[`/ketchup`](../../skills/ketchup/SKILL.md) tells you in plain words what changed since your last message, then lists each call waiting on you with its pick, evidence, and risk. It changes nothing while it reports.
+[`/pstack-ketchup`](../../skills/ketchup/SKILL.md) tells you in plain words what changed since your last message, then lists each call waiting on you with its pick, evidence, and risk. It changes nothing while it reports.
 
 ## The pitfalls
 
 - **Enumerating skills in the prompt.** "use /pstack-how then /pstack-architect then /pstack-arena" reorders steps the playbook already sequences. State the goal and constraints. Name a skill only to override a default.
 - **A vague finish condition.** "make it better" gives the run nothing to check. Give a command or artifact that can pass or fail.
 - **Leading with your theory of the cause.** The agent searches wherever you pointed. Ask it to restate the problem first, then share your hunch.
-- **Taking the first design.** One attempt locks in the first shape the model thought of. Ask for prototypes or `/architect` and pick from evidence.
+- **Taking the first design.** One attempt locks in the first shape the model thought of. Ask for prototypes or `/pstack-architect` and pick from evidence.
 - **Polishing an abstract plan.** Adversarial review of a plan with no code behind it invents risks that will never happen. Settle the open questions with prototypes, then review what got built.
 - **Parallel agents in one worktree.** They overwrite each other, and nobody can tell which agent changed what. Say "own worktree per attempt".
 - **Looping before you trust the loop.** A loop that can't verify its own work only makes unchecked work faster. Get the verification skill working first.
