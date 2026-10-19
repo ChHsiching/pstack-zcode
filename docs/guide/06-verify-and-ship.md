@@ -104,7 +104,7 @@ A verification skill proves the paths you drive. Some bugs live on paths nobody 
 [`/pstack-create-formal-verification-skill`](../../skills/create-formal-verification-skill/SKILL.md) picks the target from the code: a promise the code makes, where a break harms users and tests rarely reach the case that breaks it. It picks the strongest target, not the easiest to verify. Name an area or a bug to start there instead:
 
 ```text
-/create-formal-verification-skill the job lease and retry logic. a job must never run twice at once.
+/pstack-create-formal-verification-skill the job lease and retry logic. a job must never run twice at once.
 ```
 
 The question picks the tool. Whether events can happen in a bad order suits a model checker over a small model of the design. Whether the code behaves for every input suits a verifier that runs on the code. A property that must hold at every size can need a proof. The agent tells you which tool it chose and why.

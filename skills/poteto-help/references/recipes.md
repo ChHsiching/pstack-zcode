@@ -35,7 +35,6 @@ Swap in the real paths, skills, and done checks. Informal wording works.
 
 - `/pstack-interrogate the whole branch, but skeptically. don't change anything yet. no nitpicks unless it's a real bug or regression.` Read the dismissals too.
 - `/pstack-create-formal-verification-skill prove <property> holds in <module>, even when <steps> interleave or retry.`
-- `/pstack-ketchup catches you up on this chat since my last message, in plain words, with every item waiting on me listed and decidable from your reply alone.`
 - `/pstack-swarm check every package under <dir> against its check script. one worker per package. one report.`
 - `/pstack-poteto-mode open the pr. small ordered commits, evidence in the description.`
 - `/pstack-poteto-mode babysit this pr. get it green.` For status only: `/pstack-poteto-mode check on pr <number>. anything outstanding?`
@@ -45,6 +44,7 @@ Swap in the real paths, skills, and done checks. Informal wording works.
 
 - `/pstack-poteto-mode im going to bed. <goal> in a fresh worktree off <base>. done means <checks>. keep a decision log. don't ask me before committing. loop until done. if you're truly stuck after a few hours, stop and write up why.`
 - `/pstack-show-me-your-work catch me up on what you did last night.` Read its Attention section first.
+- `/pstack-ketchup catches you up on this chat since my last message, in plain words, with every item waiting on me listed and decidable from your reply alone.`
 - `/pstack-poteto-mode full autopilot on this queue. each item is independent.`
 - `/pstack-poteto-mode autopilot these changes but stack them, don't ship. i'll land the stack.`
 - `/pstack-reflect capture what we learned so the next run doesn't repeat it.` Approve only edits that change a future decision.

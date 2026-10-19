@@ -23,7 +23,7 @@ A misreading shows up in the restatement, where it costs one message to correct.
 ## Aim a task before it starts
 
 ```text
-/sharpen write the onboarding doc for the new billing service.
+/pstack-sharpen write the onboarding doc for the new billing service.
 ```
 
 The agent asks how an expert would do the task, what you're really after, and whether the ask says too much or too little. It keeps one outside check that the result is right, then does the work.
@@ -87,7 +87,7 @@ The qualifiers do real work. "don't change anything yet" keeps it read-only, and
 ## Prove a property tests rarely reach
 
 ```text
-/create-formal-verification-skill the retry queue. a message must never be delivered twice.
+/pstack-create-formal-verification-skill the retry queue. a message must never be delivered twice.
 ```
 
 You get one property checked in every case within a stated scope, a counterexample in your code's terms if the code already breaks it, and a project skill the next agent runs on any change to that code.
