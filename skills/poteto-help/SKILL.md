@@ -24,8 +24,9 @@ Infer the need from the message and the conversation. A named situation, such as
 
 Check the state that changes the answer, and mention it only when it does:
 
-- No `~/.zcode/pstack/models.md` means `/pstack-setup-pstack` hasn't run for this user, so every role runs on the session model.
+- No `~/.zcode/pstack/models.md` means `/pstack-setup-pstack` hasn't run for this user, so every role uses its default model.
 - No `verify-*` skill or other app harness in the project means agents have no scripted way to drive the app. Mention `/pstack-create-verification-skill` when the question is about proving a change works.
+- No formal verification skill in the project means no property is checked past what tests reach. Mention `/pstack-create-formal-verification-skill` when the question is about a race, an invariant, or another case tests rarely hit.
 
 When the models file is missing and it matters, ask whether the user wants to pick a model for each role and a reasoning budget now. It matters when the user is new, the question is about setup or cost, or the answer depends on which models run. Ask at most once per chat. If the need is also unclear, ask both questions together. Offer two choices:
 
@@ -35,7 +36,7 @@ When the models file is missing and it matters, ask whether the user wants to pi
 ## Get set up
 
 1. Install with `npx skills add ChHsiching/pstack-zcode`.
-2. Run [`/pstack-setup-pstack`](../setup-pstack/SKILL.md). It asks for a reasoning budget, maps a model to each role, and writes a data file that skills read at spawn time. Preset agents it writes apply to new chats.
+2. Run [`/pstack-setup-pstack`](../setup-pstack/SKILL.md). It asks for a reasoning budget, maps a model to each role, and writes a data file that skills read at spawn time. Preset agents it writes apply to new chats. Then it offers once each to generate a verification skill and a formal verification skill for the project, unless the project already has one.
 3. Start a real task with `/pstack-poteto-mode`, a goal, and a check that can pass or fail.
 
 Installing changes nothing until the user invokes a skill. Only `/pstack-setup-pstack` loads from the user's words. The [README](../../README.md) and [guide page 1](../../docs/guide/01-setup.md) have the details. Offer to word their first prompt with them, per [`references/prompting.md`](references/prompting.md).

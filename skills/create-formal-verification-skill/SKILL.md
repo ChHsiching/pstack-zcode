@@ -16,7 +16,7 @@ A good target is a promise the code makes, where a break harms users and tests r
 
 ## Let the question choose the tool
 
-Pick the tool that answers the question at the lowest cost: a model checker, a proof assistant, an SMT-backed verifier, or another tool. Whether events can happen in a bad order usually suits a model checker over a small model of the design. Whether the code itself behaves for every input, as with memory safety, overflow, or a data-structure invariant, usually suits a verifier that runs on the code. A property that must hold at every size, where a bound is not enough, can need a proof. For concurrent and distributed designs, TLA+ is often the most useful place to start. Prefer a tool that the repo's developers can install and run, and tell the user why you chose it.
+Pick the tool that answers the question at the lowest cost: a model checker, a proof assistant, an SMT-backed verifier, or another tool. Whether events can happen in a bad order usually suits a model checker over a small model of the design, and TLA+ is the default for that in any language. Whether the code itself behaves for every input, as with memory safety, overflow, or a data-structure invariant, usually suits a verifier that runs on the code. If no verifier runs on this language, say so, and test the real code with generated inputs, not a hand model of the function. A property that must hold at every size, where a bound is not enough, can need a proof. Prefer a tool that the repo's developers can install and run, and tell the user why you chose it.
 
 ## What makes it good
 
