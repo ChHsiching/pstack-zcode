@@ -47,7 +47,7 @@ Human review isn't on the list. A reviewer who must catch the same mistake on ev
 
 It reads recent commits, reverts, review comments, and comments that explain workarounds, then groups the mistakes into classes. A class counts once it has happened twice. It fixes the most frequent classes one commit each, at the highest level that works, and proves each new check fails on a real past mistake. It also keeps a table in the agent instruction file that pairs each rule with what enforces it, so a rule that nothing enforces shows up as a repeat. The reply lists each class with its evidence, the level chosen, and why a higher level didn't work.
 
-Run it with no argument and it finds the classes from history on its own. `/pstack-reflect` and `/pstack-correct` split the work. `/pstack-reflect` improves skills from one session. `/pstack-correct` changes the repo so a mistake class can't come back. Pair it with `/architect` when the fix is a new boundary. [Run many projects in parallel](./07-overnight.md#run-many-projects-in-parallel) has a prompt that does both across a whole repo.
+Run it with no argument and it finds the classes from history on its own. `/pstack-reflect` and `/pstack-correct` split the work. `/pstack-reflect` improves skills from one session. `/pstack-correct` changes the repo so a mistake class can't come back. Pair it with `/pstack-architect` when the fix is a new boundary. [Run many projects in parallel](./07-overnight.md#run-many-projects-in-parallel) has a prompt that does both across a whole repo.
 
 ## Author a focused skill
 
@@ -59,7 +59,11 @@ When you already know the workflow you want to capture:
 
 Writing a skill matches the [Authoring or modifying a skill playbook](../../skills/poteto-mode/playbooks/authoring-a-skill.md), which validates the frontmatter and links, and ships the result through the Opening a PR playbook. Agent-facing prose has a higher bar than human prose, because an unhelpful sentence becomes an instruction some future agent follows. Let the playbook hold that bar rather than writing a `SKILL.md` freehand.
 
+<<<<<<< HEAD
 Two special cases have their own generators. A skill that must drive your app and prove behavior is a verification skill, so use [`/pstack-create-verification-skill`](../../skills/create-verification-skill/SKILL.md) and [`/pstack-maintain-verification-skill`](../../skills/maintain-verification-skill/SKILL.md) instead. A skill that checks a property of your code with a model checker, a proof, or another verifier is a formal verification skill, so use [`/pstack-create-formal-verification-skill`](../../skills/create-formal-verification-skill/SKILL.md). [Verify and ship](./06-verify-and-ship.md#create-a-project-verification-skill) covers both kinds.
+=======
+Two special cases have their own generators. A skill that must drive your app and prove behavior is a verification skill, so use [`/pstack-create-verification-skill`](../../skills/create-verification-skill/SKILL.md) and [`/pstack-maintain-verification-skill`](../../skills/maintain-verification-skill/SKILL.md) instead. A skill that checks a property of your code with a model checker, a proof, or another verifier is a formal verification skill, so use [`/pstack-create-formal-verification-skill`](../../skills/create-formal-verification-skill/SKILL.md) and [`/pstack-maintain-formal-verification-skill`](../../skills/maintain-formal-verification-skill/SKILL.md). [Verify and ship](./06-verify-and-ship.md#prove-a-property-with-a-formal-verification-skill) covers both kinds.
+>>>>>>> 41d0a9580b4ffa244a3d5ea38b1775c9e255819c
 
 ## Write docs to a standard with `/pstack-technical-writing`
 

@@ -33,12 +33,12 @@ Swap in the real paths, skills, and done checks. Informal wording works.
 
 ## Review and ship
 
-- `/pstack-interrogate the whole branch, but skeptically. don't change anything yet. no nitpicks unless it's a real bug or regression.` Read the dismissals too.
-- `/pstack-create-formal-verification-skill prove <property> holds in <module>, even when <steps> interleave or retry.`
-- `/pstack-swarm check every package under <dir> against its check script. one worker per package. one report.`
-- `/pstack-poteto-mode open the pr. small ordered commits, evidence in the description.`
-- `/pstack-poteto-mode babysit this pr. get it green.` For status only: `/pstack-poteto-mode check on pr <number>. anything outstanding?`
-- `/pstack-poteto-mode land the stack.`
+- `/interrogate the whole branch, but skeptically. don't change anything yet. no nitpicks unless it's a real bug or regression.` Read the dismissals too.
+- `/create-formal-verification-skill prove <property> holds in <module>, even when <steps> interleave or retry.` After merges or refactors in that code: `/pstack-maintain-formal-verification-skill`.
+- `/swarm check every package under <dir> against its check script. one worker per package. one report.`
+- `/poteto-mode open the pr. small ordered commits, evidence in the description.`
+- `/poteto-mode babysit this pr. get it green.` For status only: `/poteto-mode check on pr <number>. anything outstanding?`
+- `/poteto-mode land the stack.`
 
 ## Away and back
 
