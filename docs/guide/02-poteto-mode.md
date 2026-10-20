@@ -66,11 +66,7 @@ For a noisy report, such as a long thread or a vague bug, make the restatement t
 
 A misreading shows up in the restatement, before any code exists. Correct it there, and it costs you one message instead of one wrong fix. For the restatement alone, with no playbook, run [`/pstack-in-your-own-words`](../../skills/in-your-own-words/SKILL.md). It restates what the agent thinks your goals are and what problem you're trying to solve.
 
-<<<<<<< HEAD
-When you're unsure whether a task is aimed right, put [`/pstack-sharpen`](../../skills/sharpen/SKILL.md) in front of it:
-=======
 When you're unsure whether a prompt is aimed right, run [`/pstack-sharpen`](../../skills/sharpen/SKILL.md) on it before you send it:
->>>>>>> e28ccfa0ee99b0abc6f10a43594b5dd9e975da0e
 
 ```text
 /pstack-sharpen write a migration guide for the v2 config format.
