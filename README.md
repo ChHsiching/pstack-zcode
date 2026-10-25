@@ -22,7 +22,13 @@ fork it. improve it. make it yours. PRs are welcome!
 npx skills add ChHsiching/pstack-zcode -g -a zcode -y
 ```
 
+<<<<<<< HEAD
 the [skills CLI](https://github.com/vercel-labs/skills) installs all skills into `~/.zcode/skills/` and `~/.agents/skills/`. skills load in new ZCode sessions, so start a fresh session after installing. update with `npx skills update -g`, remove with `npx skills remove`. the skills CLI cannot carry hooks, so this route has no [summary hook](#poteto-mode-summary); only the plugin route has it.
+=======
+claude code leaves auto-update off for third-party marketplaces, so pstack stays on the version you installed. to turn it on, run `/plugin`, open the **marketplaces** tab, select `cursor-plugins`, and choose **enable auto-update**. to update once by hand, run `claude plugin update pstack@cursor-plugins`.
+
+claude code prefixes plugin commands and agents, so `/pstack-poteto-mode` is `/pstack:poteto-mode`. the [claude code adapter](./docs/harness/claude-code.md) maps every other cursor name. in claude code, `/pstack:setup-pstack` writes your model choices to `~/.claude/rules/pstack-models.md`, and a step that needs a cursor-only feature, such as bugbot or automations, is skipped with a one-line note.
+>>>>>>> 9df795baff5031af87d0a846092257a634636583
 
 the plugin route also ships the two subagents; they load as `pstack-zcode:poteto-agent` and `pstack-zcode:comment-sicko`. on the skills route the skills CLI does not install agent files, so one line fetches both from this repo's raw URLs, self-checks them, and exits non-zero on any miss. re-runs install nothing when the files are identical:
 
@@ -40,12 +46,12 @@ the skill stack is upstream pstack, unchanged in behavior. every difference is a
 |---|---|
 | `/add-plugin pstack` installs a plugin | install the **pstack-zcode** plugin from the marketplace `ChHsiching/pstack-zcode`, or run `npx skills add ChHsiching/pstack-zcode` for skills only |
 | subagents ship inside the plugin | the plugin route ships them the same way; the skills route fetches them into `~/.zcode/agents/` with one self-checking script |
-| skills invoke as `/poteto-mode`, `/how`, … | every skill carries a `pstack-` prefix: `/pstack-poteto-mode`, `/pstack-how`, … |
+| skills invoke as `/pstack-poteto-mode`, `/pstack-how`, … | every skill carries a `pstack-` prefix: `/pstack-poteto-mode`, `/pstack-how`, … |
 | model roles default to a two-model panel, opus and grok | unconfigured roles inherit the session model; setup-pstack offers a two-family panel when the machine has two model families |
 | model roles live in a cursor rule (`~/.cursor/rules/pstack-models.mdc`) | model roles live in a data file (`~/.zcode/pstack/models.md`) read at spawn time; with no file, every role runs on the session model |
 | panels spawn through the Task tool with `subagent_type` | panels fan out through dynamic workflows, one agent per entry with its own model and reasoning level |
 | orchestrate and autopilot nest subagents three deep | orchestration is workflow topology: the script queues, spawns, and gates; no agent nests |
-| a custom mode keeps `/poteto-mode` on across turns | type `/pstack-poteto-mode` at the start of each task; the plugin adds an off-by-default summary toggle |
+| a custom mode keeps `/pstack-poteto-mode` on across turns | type `/pstack-poteto-mode` at the start of each task; the plugin adds an off-by-default summary toggle |
 | cursor's `/loop` re-wakes a run | long runs follow a documented loop recipe: workflow self-loop, stop-hook rounds, or a cron wake ([overnight guide](./docs/guide/07-overnight.md)) |
 | cursor Projects host standing coordinators in the cloud | orchestrate runs one coordinator chat locally over a workflow |
 | cloud subagents give each parallel task its own VM | local worktrees give each parallel task its own checkout |
@@ -167,6 +173,7 @@ to keep the rigor running across a long task, start follow-up work with `/pstack
 
 | skill | use it when |
 |---|---|
+<<<<<<< HEAD
 | [`/pstack-poteto-mode`](./skills/poteto-mode/SKILL.md) | default entry point for any non-trivial task. |
 | [`/pstack-poteto-help`](./skills/poteto-help/SKILL.md) | you're new to pstack, or unsure which skill, playbook, or principle fits. finds out what you're trying to do, answers that part, and hands you a prompt to type. runs only when you type `/pstack-poteto-help`. |
 | [`/pstack-in-your-own-words`](./skills/in-your-own-words/SKILL.md) | you want the agent to play back your goal and the problem before it starts. runs only when you type `/pstack-in-your-own-words`. |
@@ -200,6 +207,42 @@ to keep the rigor running across a long task, start follow-up work with `/pstack
 | [`/pstack-unslop`](./skills/unslop/SKILL.md) | you're cleaning up writing. removes AI tells. |
 | [`/pstack-bro`](./skills/bro/SKILL.md) | you want the last message restated in plain human language, no jargon. |
 | [`/pstack-technical-writing`](./skills/technical-writing/SKILL.md) | layered doc standard (Diátaxis + Google developer style + STE + Global English) for docs, RFCs, readmes, PR descriptions, commit messages. |
+=======
+| [`/pstack-poteto-mode`](./skills/poteto-mode/SKILL.md) | default entry point for any non-trivial task. |
+| [`/pstack-poteto-help`](./skills/poteto-help/SKILL.md) | you're new to pstack, or unsure which skill, playbook, or principle fits. finds out what you're trying to do, answers that part, and hands you a prompt to type. runs only when you type `/pstack-poteto-help`. |
+| [`/pstack-in-your-own-words`](./skills/in-your-own-words/SKILL.md) | you want the agent to play back your goal and the problem before it starts. runs only when you type `/pstack-in-your-own-words`. |
+| [`/pstack-sharpen`](./skills/sharpen/SKILL.md) | you want a prompt made deeper, not bigger, before you send it: what a top professional would do that you didn't ask for, the raw material they'd start from, their methods and tools, and an outside check that the result is right. hands back the rewritten prompt and leaves your choices open. doesn't do the task. runs only when you type `/pstack-sharpen`. |
+| [`/pstack-how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
+| [`/pstack-why`](./skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
+| [`/pstack-recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
+| [`/pstack-ketchup`](./skills/ketchup/SKILL.md) | you want what changed in this chat since your last message, in plain words and small visuals, with every item waiting on you listed and decidable from the reply alone, even when that makes the reply long. |
+| [`/pstack-ketchup-video`](./skills/ketchup-video/SKILL.md) | you want the `/pstack-ketchup` catch-up as a short silent video of slides, with the calls waiting on you as text under it. |
+| [`/pstack-blast-radius`](./skills/blast-radius/SKILL.md) | you have a small-looking change and want to know what else it could break, with the one fact it's safe because of proven by running code, not asserted. |
+| [`/pstack-architect`](./skills/architect/SKILL.md) | you're about to write code that crosses a function boundary and want the caller's usage, types, and module shape settled first. |
+| [`/pstack-arena`](./skills/arena/SKILL.md) | you want N parallel attempts at the same thing, then to grab the best parts of each. |
+| [`/pstack-swarm`](./skills/swarm/SKILL.md) | you want N parallel workers across different slices or races, then one aggregated report. |
+| [`/pstack-interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want different models to try to break it, including a strict code-quality lens. |
+| [`/pstack-automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
+| [`/pstack-make-bot-ui`](./skills/make-bot-ui/SKILL.md) | you want a page or dashboard whose buttons wake a Grok Bot over a webhook, including the sender-key handoff and Tailscale. |
+| [`/pstack-setup-pstack`](./skills/setup-pstack/SKILL.md) | you want to pick which models pstack uses per role. detects your models and writes a config rule. |
+| [`/pstack-reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
+| [`/pstack-correct`](./skills/correct/SKILL.md) | you keep correcting agents for the same mistakes. mines history for mistake classes, fixes each at the highest level that works (architecture, then types, lint, and ci, then tests, with docs last), and keeps a table pairing each rule with what enforces it. |
+| [`/pstack-teach`](./skills/teach/SKILL.md) | you want to actually understand a change or subsystem, not just have it summarized. runs how + why and weaves one plain explanation, built up diagram by diagram. |
+| [`/pstack-tdd`](./skills/tdd/SKILL.md) | you're fixing a bug and there's a cheap local test path. write the failing test first, then the fix. |
+| [`/pstack-benchmark-checklist`](./skills/benchmark-checklist/SKILL.md) | you ran a benchmark or measured a speedup or regression. vets the number (limiter, tuning, errors, repeat runs, end-to-end relevance) before you report or act on it. |
+| [`/pstack-no-comments`](./skills/no-comments/SKILL.md) | strip comments before review; spawns Comment Sicko, fixes accepted findings, offers encodings for claimed constraints. |
+| [`/pstack-typescript-best-practices`](./skills/typescript-best-practices/SKILL.md) | you're reading or editing typescript. grounds the type-system-discipline principle in syntax. |
+| [`/pstack-figure-it-out`](./skills/figure-it-out/SKILL.md) | no bundled playbook fits. designs a rigorous, auditable playbook for the task. |
+| [`/pstack-show-me-your-work`](./skills/show-me-your-work/SKILL.md) | you want a reviewable decision trail. logs decisions to a tsv you can commit. |
+| [`/pstack-create-verification-skill`](./skills/create-verification-skill/SKILL.md) | your project has no scripted way to prove app behavior. generates a project-local verify skill with a feature map, for any language or platform. |
+| [`/pstack-maintain-verification-skill`](./skills/maintain-verification-skill/SKILL.md) | your verify skill's feature map has drifted from the app. source wave + one live pass, at most one PR of proven corrections. |
+| [`/pstack-create-formal-verification-skill`](./skills/create-formal-verification-skill/SKILL.md) | tests can't reach the case that breaks a race, retry, state machine, parser, or unsafe code. verifies one property with the tool that fits and generates a project-local skill to recheck it on every change. |
+| [`/pstack-maintain-formal-verification-skill`](./skills/maintain-formal-verification-skill/SKILL.md) | code your formal verification covers has changed since it was last checked. updates the model, harness, or properties to match the code, reruns, and says whether each failure is drift in the verification or a bug in the code. |
+| [`/pstack-statechart`](./skills/statechart/SKILL.md) | someone who owns the behavior needs to see it, not read a spec. draws what the user sees as a mermaid statechart generated from a tla+ model, marks each state works, still wrong, or fixed by your open pr, and draws each bug tlc finds as a numbered path. also turns an agreed chart into a tla+ skeleton, or audits the code against an existing spec. |
+| [`/pstack-unslop`](./skills/unslop/SKILL.md) | you're cleaning up writing. removes AI tells. |
+| [`/pstack-bro`](./skills/bro/SKILL.md) | you want the last message restated in plain human language, no jargon. |
+| [`/pstack-technical-writing`](./skills/technical-writing/SKILL.md) | layered doc standard (Diátaxis + Google developer style + STE + Global English) for docs, RFCs, readmes, PR descriptions, commit messages. |
+>>>>>>> 9df795baff5031af87d0a846092257a634636583
 
 </details>
 

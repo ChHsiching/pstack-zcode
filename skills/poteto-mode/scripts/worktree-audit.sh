@@ -49,6 +49,14 @@ origin/*) git fetch origin "+refs/heads/${base#origin/}:refs/remotes/$base" --qu
 esac
 git rev-parse --verify --quiet "$base^{commit}" >/dev/null 2>&1 || { echo "error: base ref not found: $base" >&2; exit 1; }
 
+# GNU coreutils (Linux, Homebrew gnubin) reads `stat -f` as file system status
+# and `date -r` as a file, so pick the stat and date flags once.
+if stat -c %Y / >/dev/null 2>&1; then
+	stat_fmt=(-c '%Y %n'); fmt_day() { date -d "@$1" '+%Y-%m-%d'; }
+else
+	stat_fmt=(-f '%m %N'); fmt_day() { date -r "$1" '+%Y-%m-%d'; }
+fi
+
 # PR state by branch, fetched once as [{number, state, head}] with a lowercase
 # state. Origin when its CLI can read this repo's PRs, otherwise gh. Empty when
 # neither can.
@@ -104,11 +112,19 @@ git worktree list --porcelain | awk '/^worktree /{print $2}' | while read -r wt;
 	# short-path normalized inside). No python, or a missing or unreadable
 	# store, degrades LAST_CHAT to "-"; the audit still completes.
 	last="-"; last_ts=0
+<<<<<<< HEAD
 	updated=$(python "$script_dir/session-store.py" list --dir "$wt" --days 0 --limit 1 2>/dev/null \
 		| awk -F'\t' 'NR==2 {print $2; exit}')
 	if [ -n "$updated" ]; then
 		last=${updated%% *}
 		last_ts=$(date -d "$updated" +%s 2>/dev/null || echo 0)
+=======
+	if [ -d "$transcripts" ]; then
+		f=$(rg -l -e "${wt}/" -e "${wt}\"" "$transcripts" 2>/dev/null \
+			| xargs stat "${stat_fmt[@]}" 2>/dev/null | sort -rn | head -1)
+		if [ -n "$f" ]; then last_ts=$(echo "$f" | awk '{print $1}')
+			last=$(fmt_day "$last_ts" 2>/dev/null); fi
+>>>>>>> 9df795baff5031af87d0a846092257a634636583
 	fi
 	recent=$([ "$last_ts" -gt 0 ] 2>/dev/null && [ $(( (now - last_ts) / 86400 )) -le 4 ] && echo yes || echo no)
 
