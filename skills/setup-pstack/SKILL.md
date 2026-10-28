@@ -30,15 +30,7 @@ The default role-to-model mapping is the table shape shown in step 5 below: ever
 
 **(b) Offer a diversity panel once.** When the detected set holds at least two distinct families and the panel rows still sit at their default (an existing file that already carries a panel choice skips this), ask one AskUserQuestion right after the budget answer, offering exactly these choices:
 
-- `two-family panel — inherit-parent, <other-family model> (Recommended)` — name a concrete detected model from a family other than the session model's, preferring a provider that is not a localhost endpoint. Adopting sets every panel row to `inherit-parent, <other-family model>`: the first seat keeps session-model semantics, the second seats cross-check from the other family, and all other roles stay `inherit-parent`.
-- `keep all-inherit` — the default; re-run this skill anytime to change your mind.
-- `customize per role` — skip the presets and go straight to the per-role confirm below.
-
-A decline or an unanswered question writes nothing and leaves no trace, so the next run offers again; never record a decline as a per-role choice.
-
-**(c) Apply it.** Build the working table from the defaults, and on a re-run keep any role you changed by model, list, or `inherit-parent`. `unlimited`, `large`, `medium`, and `small` set the reasoning level of every pinned model, panel entries included, to `max`, `xhigh`, `high`, or `medium`. Use the highest level the model supports at or below the target; a model with no levels keeps its own default. `inherit-parent` does not change.
-
-**(d) Show the roles and confirm.** Show every role with its model, marking any real model id not in the detected set as needing a choice. Also list each line step 2 dropped. Ask whether to accept as-is or change specific roles, offering the detected models plus `inherit-parent` (the role runs on the session model) as the options. Prefer AskUserQuestion over free text. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena selects one value from it whose model's provider differs from the parent's when possible. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
+**(c) Show the roles and confirm.** Show every role with its model, marking any real slug not in the detected set as needing a choice. Also list each line step 2 dropped. Ask whether to accept as-is or change specific roles, offering the detected models plus `inherit-parent` and `auto` (both mean: this role runs on the parent chat model, which is how Auto users stay on Auto) as the options. Prefer AskUserQuestion over free text. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena runs one judge. It tries only values from a family other than the parent's, in list order, so order it by preference. An `inherit-parent` value never judges. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
 
 ### 4. Validate
 
