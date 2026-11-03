@@ -1,6 +1,6 @@
 # setup-pstack offers a diversity panel when detection finds two families
 
-ADR-0005 defaults every role to inherit-parent because the machine's models are unknowable in the abstract. But setup-pstack's detection reads the machine's actually-configured providers — `provider_config.json` union `config.json` (enabled plus credentials present); never `model-providers.json`, which is a template catalog where most entries have no keys — so the model inventory is real, not assumed. A blocked-model filter (the deepseek-flash family) is hard-coded into the detection step and never proposed.
+ADR-0005 defaults every role to inherit-parent because the machine's models are unknowable in the abstract. But setup-pstack's detection reads the machine's actually-configured providers — `provider_config.json` union `config.json` (enabled plus credentials present); never `model-providers.json`, which is a template catalog where most entries have no keys — so the model inventory is real, not assumed. Detection proposes every configured model; no model-specific filter ships in a skill (ADR-0013).
 
 When at least two distinct model families are configured, setup-pstack asks once, after budgeting and before the per-role questions: adopt a two-entry panel on the panel rows (first seat inherit-parent — the session-model follower — second seat the other family), keep everything inherited, or customize per role. A decline changes nothing and leaves no trace in the written state, so re-runs stay idempotent. The offer never becomes a default; the user's answer does.
 
