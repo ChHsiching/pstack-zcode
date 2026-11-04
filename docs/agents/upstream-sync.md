@@ -4,7 +4,7 @@ The procedure for taking upstream (`cursor/plugins`, `pstack/` subtree) changes 
 
 ## When to sync
 
-Absorb **released** versions only: the trigger is a version bump in upstream `pstack/plugin.json`. The weekly CI patrol reports new versions and does nothing else. Unreleased dev commits on `upstream/main` wait for their release (as of 2026-10-17: #637, a Claude Code install-docs commit, sits unreleased on top of 0.15.25). When the user says "同步上游" — or the patrol reports a bump and the user says go — run the loop below.
+Absorb **released** versions only: the trigger is a version bump in upstream `pstack/plugin.json`. The weekly CI patrol reports new versions and does nothing else. Unreleased dev commits on `upstream/main` wait for their release (as of 2026-10-17: #637, a Claude Code install-docs commit, sits unreleased on top of 0.15.25). When the user asks to sync upstream — or the patrol reports a bump and the user says go — run the loop below.
 
 ## Phase 1 — Analyze (before any merge)
 
