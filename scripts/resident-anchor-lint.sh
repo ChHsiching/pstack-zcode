@@ -90,11 +90,9 @@ grep -qF -- 'playbooks/<title>.md' "$skill" || {
 	status=1
 }
 
-[ "$status" -eq 0 ] && echo "resident-anchor: clean ($skill_ref_count skill reference(s), $section_count pinned section(s), playbook pointer all resolve against $skill)."
-exit "$status"
-
 # 4. Every SKILL.md frontmatter name carries the pstack- prefix.
 #    Added after the v0.15.36 sync lost three prefixes in a merge.
+#    The check sat after the script's exit until 2026-11-04 and never ran.
 bad_names=$(grep -rL "^name: pstack-" skills/*/SKILL.md 2>/dev/null || true)
 if [ -n "$bad_names" ]; then
 	echo "resident-anchor: SKILL.md without pstack- prefix:"
