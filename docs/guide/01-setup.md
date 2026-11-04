@@ -24,7 +24,7 @@ Run:
 
 [`/pstack-setup-pstack`](../../skills/setup-pstack/SKILL.md) detects the models you have access to, asks for a reasoning budget, shows you each role (code delegates, judgment, the review panels), and asks what you want. Answer the questions. It writes `~/.zcode/pstack/models.md`, a data file every pstack skill reads at spawn time.
 
-The `large` budget is the default and targets `xhigh` reasoning. `unlimited` targets each pinned model's top level, `max`; a model uses the highest level it supports at or below the target, and a model with no levels keeps its own default. `medium` and `small` lower the reasoning and spend fewer tokens.
+The `large` budget is the default and targets `xhigh` reasoning. `unlimited` targets each pinned model's top level, `max`. Levels rank `max` > `xhigh` > `high` > `medium` > `low` > `minimal`; this ladder is a port convention, since ZCode defines none. A model uses the highest level it supports at or below the target, and a model with no levels keeps its own default. `medium` and `small` lower the reasoning and spend fewer tokens.
 
 You only override what you care about. A role with no line in the file keeps the default, the session model. To restore a default, delete that role's line. A rerun of `/pstack-setup-pstack` keeps any role whose model differs from the default. When a default changes, a line written before the change still pins the old model, so delete those role lines, or delete the file, then run `/pstack-setup-pstack` again.
 
