@@ -50,7 +50,15 @@ Do not count a skill loaded from the current session or a user-scoped install. T
 
 If workspace-scoped skill installation is unavailable or any shared dependency does not resolve, stop and explain the failure.
 
-The Benny files are read directly from `.zcode/automations/benny/`. Do not add that directory to a skills root or expect its `SKILL.md` files to appear in the slash-skill list.
+- `why`
+- `tdd`
+- `unslop`
+- `principle-separate-before-serializing-shared-state`
+- `principle-minimize-reader-load`
+- `principle-guard-the-context-window`
+- `principle-sequence-verifiable-units`
+- `principle-fix-root-causes`
+- `principle-prove-it-works`
 
 Tell the user that `.zcode/skills/`, `.zcode/automations/benny/`, and any referenced secret-free configuration must be committed before either automation is enabled. Do not commit them unless the user asks.
 

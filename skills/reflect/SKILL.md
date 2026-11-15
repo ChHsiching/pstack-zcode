@@ -22,9 +22,9 @@ Each reviewer and the synthesizer name a role line in `~/.zcode/pstack/models.md
 
 | Lens | Role line | Default `model` | Prompt template |
 |---|---|---|---|
-| Judgment | `reflect judgment, divergent, synthesizer` | `inherit-parent` | `references/judgment-reviewer.md` |
-| Tooling | `reflect tooling` | `inherit-parent` | `references/tooling-reviewer.md` |
-| Divergent | `reflect judgment, divergent, synthesizer` | `inherit-parent` | `references/divergent-reviewer.md` |
+| Judgment | `reflect judgment, divergent, synthesizer` | the session model | `references/judgment-reviewer.md` |
+| Tooling | `reflect tooling` | the session model | `references/tooling-reviewer.md` |
+| Divergent | `reflect judgment, divergent, synthesizer` | the session model | `references/divergent-reviewer.md` |
 
 Pass each template verbatim, substituting the session digest where marked. Reviewers return findings in their response body.
 

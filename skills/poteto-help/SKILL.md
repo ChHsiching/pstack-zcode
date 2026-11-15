@@ -45,7 +45,7 @@ If cost is the worry, say where the tokens go and how to spend fewer. pstack spe
 
 ## Start a task with `/pstack-poteto-mode`
 
-`/pstack-poteto-mode` matches the task to a playbook, copies the playbook's steps into the todo list, and runs the other skills as the steps need them. A step it skips stays in the list as `skip: <reason>`. A good prompt states the goal and how to tell it's done. It doesn't list skills, because a hand-written sequence tends to drop or reorder steps the playbook would keep. Read [`references/prompting.md`](references/prompting.md) before you help word one. [Guide page 2](../../docs/guide/02-poteto-mode.md) has examples.
+Other tools can read the skills, because they use the Agent Skills format. But most workflow skills, including `/pstack-poteto-mode`, `/pstack-how`, and `/pstack-teach`, spawn subagents, some with per-role models, and a persistent mode and the long-run recipe are adapted for ZCode.
 
 Whether `/pstack-poteto-mode` stays on depends on how the user starts it:
 
@@ -132,40 +132,40 @@ The default answer is `/pstack-poteto-mode`, which runs most of the others when 
 | Find their way around pstack | `/pstack-poteto-help` |
 >>>>>>> d2a7dcc3d00d9ae32e91a92071f2d551ced88d6d
 =======
-| Do any non-trivial task with rigor | [`/poteto-mode`](../poteto-mode/SKILL.md) |
-| Check that the agent understood their goal and the problem before it starts | [`/in-your-own-words`](../in-your-own-words/SKILL.md) |
-| Get a prompt rewritten deeper, not bigger, before sending it: what a top professional would add, their raw material and methods, and an outside check. It returns the prompt and doesn't do the task | [`/sharpen`](../sharpen/SKILL.md) |
-| Know how code works now, or where new code should live | [`/how`](../how/SKILL.md) |
-| Know why code is shaped this way, or where a number came from | [`/why`](../why/SKILL.md) |
-| Understand a change or subsystem, explained plainly | [`/teach`](../teach/SKILL.md) |
-| Catch up on their own recent work on a topic | [`/recall`](../recall/SKILL.md) |
-| Catch up on what changed in this chat since their last message, in plain words and small visuals, with every item waiting on them listed and decidable from the reply alone | [`/ketchup`](../ketchup/SKILL.md) |
-| Catch up like `/ketchup`, in a short subtitled video of slides, with the waiting calls as text under it | [`/ketchup-video`](../ketchup-video/SKILL.md) |
-| Know what a small diff could break outside itself | [`/blast-radius`](../blast-radius/SKILL.md) |
-| Settle types and module shape before code that crosses a function boundary | [`/architect`](../architect/SKILL.md) |
-| Get several attempts at one brief, merged into the best one | [`/arena`](../arena/SKILL.md) |
-| Run parallel checks over slices, or race workers, as cloud agents | [`/swarm`](../swarm/SKILL.md) |
-| Have different models review a diff and try to break it | [`/interrogate`](../interrogate/SKILL.md) |
-| Fix a bug test-first when a cheap local test exists | [`/tdd`](../tdd/SKILL.md) |
-| Apply TypeScript rules to `.ts` or `.tsx` work | [`/typescript-best-practices`](../typescript-best-practices/SKILL.md) |
-| Strip comments before review, using a reviewer that didn't write them | [`/no-comments`](../no-comments/SKILL.md) |
-| Clean AI tells out of prose | [`/unslop`](../unslop/SKILL.md) |
-| Write docs, an RFC, a README, a PR description, or a commit message to a standard | [`/technical-writing`](../technical-writing/SKILL.md) |
-| Hear the last reply again in plain words | [`/bro`](../bro/SKILL.md) |
-| Give agents a scripted way to drive the app and prove behavior | [`/create-verification-skill`](../create-verification-skill/SKILL.md) |
-| Bring a verification skill and its feature map back in line with the app | [`/maintain-verification-skill`](../maintain-verification-skill/SKILL.md) |
-| Formally verify a race, invariant, or other property that tests rarely reach | [`/create-formal-verification-skill`](../create-formal-verification-skill/SKILL.md) |
-| Bring a formal verification back in line after the code it covers changed, and learn whether a failure is drift or a bug | [`/maintain-formal-verification-skill`](../maintain-formal-verification-skill/SKILL.md) |
-| Show a PM or designer what the user sees as a chart checked by a TLA+ model, with the shortest path to each state that breaks a rule | [`/statechart`](../statechart/SKILL.md) |
-| Vet a performance number before reporting or acting on it | [`/benchmark-checklist`](../benchmark-checklist/SKILL.md) |
-| Run a large or cross-cutting change, or one to review after stepping away | [`/figure-it-out`](../figure-it-out/SKILL.md) |
-| Keep a decision log during a run, and review it afterward | [`/show-me-your-work`](../show-me-your-work/SKILL.md) |
-| Pick a model for each role and a reasoning budget | [`/setup-pstack`](../setup-pstack/SKILL.md) |
-| Turn their own working habits into a personal mode skill | [`/automate-me`](../automate-me/SKILL.md) |
-| Turn what a finished task taught into skill edits | [`/reflect`](../reflect/SKILL.md) |
-| Stop agents from repeating the same mistakes in this repo | [`/correct`](../correct/SKILL.md) |
-| Build a page whose buttons wake a Grok Bot over a webhook | [`/make-bot-ui`](../make-bot-ui/SKILL.md) |
-| Find their way around pstack | `/poteto-help` |
+| Do any non-trivial task with rigor | [`/pstack-poteto-mode`](../poteto-mode/SKILL.md) |
+| Check that the agent understood their goal and the problem before it starts | [`/pstack-in-your-own-words`](../in-your-own-words/SKILL.md) |
+| Get a prompt rewritten deeper, not bigger, before sending it: what a top professional would add, their raw material and methods, and an outside check. It returns the prompt and doesn't do the task | [`/pstack-sharpen`](../sharpen/SKILL.md) |
+| Know how code works now, or where new code should live | [`/pstack-how`](../how/SKILL.md) |
+| Know why code is shaped this way, or where a number came from | [`/pstack-why`](../why/SKILL.md) |
+| Understand a change or subsystem, explained plainly | [`/pstack-teach`](../teach/SKILL.md) |
+| Catch up on their own recent work on a topic | [`/pstack-recall`](../recall/SKILL.md) |
+| Catch up on what changed in this chat since their last message, in plain words and small visuals, with every item waiting on them listed and decidable from the reply alone | [`/pstack-ketchup`](../ketchup/SKILL.md) |
+| Catch up like `/pstack-ketchup`, in a short subtitled video of slides, with the waiting calls as text under it | [`/pstack-ketchup-video`](../ketchup-video/SKILL.md) |
+| Know what a small diff could break outside itself | [`/pstack-blast-radius`](../blast-radius/SKILL.md) |
+| Settle types and module shape before code that crosses a function boundary | [`/pstack-architect`](../architect/SKILL.md) |
+| Get several attempts at one brief, merged into the best one | [`/pstack-arena`](../arena/SKILL.md) |
+| Run parallel checks over slices, or race workers, as cloud agents | [`/pstack-swarm`](../swarm/SKILL.md) |
+| Have different models review a diff and try to break it | [`/pstack-interrogate`](../interrogate/SKILL.md) |
+| Fix a bug test-first when a cheap local test exists | [`/pstack-tdd`](../tdd/SKILL.md) |
+| Apply TypeScript rules to `.ts` or `.tsx` work | [`/pstack-typescript-best-practices`](../typescript-best-practices/SKILL.md) |
+| Strip comments before review, using a reviewer that didn't write them | [`/pstack-no-comments`](../no-comments/SKILL.md) |
+| Clean AI tells out of prose | [`/pstack-unslop`](../unslop/SKILL.md) |
+| Write docs, an RFC, a README, a PR description, or a commit message to a standard | [`/pstack-technical-writing`](../technical-writing/SKILL.md) |
+| Hear the last reply again in plain words | [`/pstack-bro`](../bro/SKILL.md) |
+| Give agents a scripted way to drive the app and prove behavior | [`/pstack-create-verification-skill`](../create-verification-skill/SKILL.md) |
+| Bring a verification skill and its feature map back in line with the app | [`/pstack-maintain-verification-skill`](../maintain-verification-skill/SKILL.md) |
+| Formally verify a race, invariant, or other property that tests rarely reach | [`/pstack-create-formal-verification-skill`](../create-formal-verification-skill/SKILL.md) |
+| Bring a formal verification back in line after the code it covers changed, and learn whether a failure is drift or a bug | [`/pstack-maintain-formal-verification-skill`](../maintain-formal-verification-skill/SKILL.md) |
+| Show a PM or designer what the user sees as a chart checked by a TLA+ model, with the shortest path to each state that breaks a rule | [`/pstack-statechart`](../statechart/SKILL.md) |
+| Vet a performance number before reporting or acting on it | [`/pstack-benchmark-checklist`](../benchmark-checklist/SKILL.md) |
+| Run a large or cross-cutting change, or one to review after stepping away | [`/pstack-figure-it-out`](../figure-it-out/SKILL.md) |
+| Keep a decision log during a run, and review it afterward | [`/pstack-show-me-your-work`](../show-me-your-work/SKILL.md) |
+| Pick a model for each role and a reasoning budget | [`/pstack-setup-pstack`](../setup-pstack/SKILL.md) |
+| Turn their own working habits into a personal mode skill | [`/pstack-automate-me`](../automate-me/SKILL.md) |
+| Turn what a finished task taught into skill edits | [`/pstack-reflect`](../reflect/SKILL.md) |
+| Stop agents from repeating the same mistakes in this repo | [`/pstack-correct`](../correct/SKILL.md) |
+| Build a page whose buttons wake a Grok Bot over a webhook | [`/pstack-make-bot-ui`](../make-bot-ui/SKILL.md) |
+| Find their way around pstack | `/pstack-poteto-help` |
 >>>>>>> 424f2f6b0e1c805d1d227dbc7a59dcb290c89f8a
 
 If a skill directory next to this one is missing from the table, read its frontmatter and route by its description. The `principle-*` directories are covered under principles below.

@@ -17,7 +17,15 @@ Tag every detected model with a family, judged from the model id first — one p
 
 ### 2. Load current state
 
-The default role-to-model mapping is the table shape shown in step 5 below: every role `inherit-parent`. If `~/.zcode/pstack/models.md` already exists, read it and treat its `# budget` line and its role values as the current choices. Otherwise start from those defaults. A line whose role is not in step 5, such as `how critics`, is from a retired role. Drop it.
+The default role-to-model mapping is the rule shape shown in step 5 below. If `~/.zcode/pstack/models.md` already exists, read it and treat its `# budget` line and its role values as the current choices. Otherwise start from those defaults. A line whose role is not in step 5, such as `how explorer` or `why investigators`, is from a retired role. Drop it.
+
+A models file without the `# defaults: 2` line comes from an older setup. That setup wrote a line for every role, so some of its values are old defaults, not choices. 
+
+- An old model in `feature, refactoring`, `bug-fix`, `perf-issue`, `hillclimb`, `reflect tooling`, or `swarm workers` takes the role's step 5 default.
+- 
+- In a panel role (`arena runners`, `arena cross-judge pool`, `architect runners`, `interrogate reviewers`), a list of exactly one the session model entry and one old model, in either order, takes the role's step 5 list. In any other list, each old model becomes the session model.
+
+Every other value is the user's choice and stays, including an old model in any other role and every `inherit-parent` value. Tell the user which values you replaced.
 
 ### 3. Budget, map, and confirm
 
@@ -28,17 +36,9 @@ The default role-to-model mapping is the table shape shown in step 5 below: ever
 - `medium — high reasoning`
 - `small — medium reasoning`
 
-**(b) Offer a diversity panel once.** When the detected set holds at least two distinct families and the panel rows still sit at their default (an existing file that already carries a panel choice skips this), ask one AskUserQuestion right after the budget answer, offering exactly these choices:
+**(b) Apply it.** Build the working table from the skill defaults, and on a re-run keep any role you changed by family, list, or alias (`inherit-parent`, `auto`). Families are the ones Phase A of the **pstack-arena** skill defines, so Fable is its own family. Each role has a target effort, which is its default's effort moved by the budget. `large` keeps it, `unlimited` raises it one step, `medium` lowers it one step, and `small` lowers it two steps, on the ladder `max` > `xhigh` > `high` > `medium` > `low`. A target at either end of the ladder stays there. Most defaults are at `xhigh`, and each budget label names where those land. Set the effort token of every real model in the role, panel entries included, to the role's target. The effort token is the last token, or the one before a trailing `fast`. If the result is not a detected model, use the same family's detected model with the highest effort at or below the target, else mark the role as needing a choice. `inherit-parent` and `auto` do not change. So `unlimited` turns the session model into the session model and the session model into the session model, and it keeps the session model. Gemini tops out at `high`, so under `unlimited` the fallback keeps the session model as it is. `small` turns the first two into the session model and the session model. Fable 5.2 and Gemini have no a lower reasoning levell, so never write one.
 
-- `two-family panel — inherit-parent, <other-family model> (Recommended)` — name a concrete detected model from a family other than the session model's, preferring a provider that is not a localhost endpoint. Adopting sets every panel row to `inherit-parent, <other-family model>`: the first seat keeps session-model semantics, the second seats cross-check from the other family, and all other roles stay `inherit-parent`.
-- `keep all-inherit` — the default; re-run this skill anytime to change your mind.
-- `customize per role` — skip the presets and go straight to the per-role confirm below.
-
-A decline or an unanswered question writes nothing and leaves no trace, so the next run offers again; never record a decline as a per-role choice.
-
-**(c) Apply it.** Build the working table from the defaults, and on a re-run keep any role you changed by model, list, or `inherit-parent`. `unlimited`, `large`, `medium`, and `small` set the reasoning level of every pinned model, panel entries included, to `max`, `xhigh`, `high`, or `medium`. Levels rank on one ladder, a port convention because ZCode defines no ladder: `max` > `xhigh` > `high` > `medium` > `low` > `minimal`. Treat only the six ladder names as levels. Give each pinned model the highest ladder level it supports at or below the target. A model with no ladder level at or below the target keeps the level it has. `inherit-parent` does not change.
-
-**(d) Show the roles and confirm.** Show every role with its model, marking any real model id not in the detected set as needing a choice. Also list each line step 2 dropped. Ask whether to accept as-is or change specific roles, offering the detected models plus `inherit-parent` (the role runs on the session model) as the options. Prefer AskUserQuestion over free text. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena runs one judge. It tries only values from a family other than the parent's, in list order, so order it by preference. An `inherit-parent` value never judges. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
+**(c) Show the roles and confirm.** Show every role with its model, marking any real model not in the detected set as needing a choice. Also list each line step 2 dropped. Ask whether to accept as-is or change specific roles, offering the detected models plus `inherit-parent` and `auto` (both mean: this role runs on the parent chat model, which is how Auto users stay on Auto) as the options. Prefer AskUserQuestion over free text. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena runs one judge. It tries only values from a vendor other than the parent's, in list order, so order it by preference. Fable and the other Claude models are one vendor. An `inherit-parent` value never judges. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
 
 ### 4. Validate
 
@@ -46,29 +46,30 @@ Every real model id written must be in the detected set. `inherit-parent` always
 
 ### 5. Write the file and the presets
 
-Write `~/.zcode/pstack/models.md` with a `# budget` line with the chosen label and its target level, and one line per role, using the same labels poteto-mode uses. Overwrite the whole file so re-runs stay idempotent. Shape:
+Write `~/.zcode/pstack/models.md` with `alwaysApply: true`, the `# defaults: 2` line, a `# budget` line with the chosen label and the effort that label names, and one line per role, using the same labels poteto-mode uses. Overwrite the whole file so re-runs stay idempotent. Shape:
 
 ```
-# pstack model configuration. One line per role. Delete a line to fall back to the default (`inherit-parent`).
-# `inherit-parent`: the role runs on the session model (omit the model). `providerId/modelId[@<level>]`: the role runs on its preset subagent with that model and reasoning level. Alias entries in a panel list still count toward its fan-out.
-# budget: large (thoughtLevel: xhigh)
+---
+description: pstack per-role model choices (overrides skill defaults)
+alwaysApply: true
+---
+# pstack model configuration. One line per role. Delete a line to fall back to the skill default.
+# `inherit-parent` as a value: the role runs on the parent chat model (omit Task `model`). Alias entries in a panel list still count toward its fan-out.
+# defaults: 2
+# budget: large (xhigh)
 feature, refactoring: inherit-parent
 bug-fix: inherit-parent
 perf-issue: inherit-parent
 hillclimb: inherit-parent
 judgment and prose: inherit-parent
 hardest tasks: inherit-parent
-how explorer: inherit-parent
-how explainer: inherit-parent
-why investigators: inherit-parent
-why synthesizer: inherit-parent
 reflect tooling: inherit-parent
 reflect judgment, divergent, synthesizer: inherit-parent
 arena runners: inherit-parent
 arena cross-judge pool: inherit-parent
 swarm workers: inherit-parent
 architect runners: inherit-parent
-interrogate reviewers: inherit-parent
+interrogate reviewers: inherit-parent, inherit-parent, inherit-parent
 ```
 
 Then generate a preset agent file `~/.zcode/agents/pstack-<role>.md` for every role pinned to a real model except the panel roles, whose lists name models directly. The preset name is `pstack-` plus the role line lowercased, spaces and commas as hyphens (`reflect judgment, divergent, synthesizer` → `pstack-reflect-judgment-divergent-synthesizer`). Give it the model in `model` and, when the model has levels, its level in `thoughtLevel`, and the body of pstack's `agents/poteto-agent.md` verbatim with the preset name in `name`. Delete any preset whose role is no longer pinned. Preset files apply to new sessions.

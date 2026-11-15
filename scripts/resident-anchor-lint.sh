@@ -45,8 +45,7 @@ fi
 #    pointing at them, and the skill file must still have them to point at.
 #    Skill names here are a minimum set; edit this list deliberately when
 #    the summary's routing changes.
-pins='pstack-how
-pstack-architect
+pins='pstack-architect
 pstack-unslop
 pstack-technical-writing'
 for pin in $pins; do

@@ -28,8 +28,8 @@ i want two zcode automations that work together in one slack issue channel.
 - i want the source channel and root thread coordinates to stay immutable for the whole run.
 - i treat utility and debug bots as evidence, not delegation or fix ownership.
 - i allow subagents to help, but they cannot post to slack or receive slack credentials.
-- i want this entire pack committed at `.zcode/automations/benny/` in the target repository. its `SKILL.md` files are direct automation instructions, not registered skills.
-- i want pstack's shared skills installed in the target repository's `.zcode/skills/` only for shared dependencies such as `pstack-how`, `pstack-why`, `pstack-tdd`, `pstack-unslop`, and the required principle skills.
+- i want this entire pack committed at `.zcode/automations/benny/` in the target repository. its `SKILL.md` files are direct automation instructions, not registered plugin skills.
+- i want pstack enabled through the target repository's committed `.zcode/settings.json` only for shared dependencies such as `why`, `tdd`, `unslop`, and the required principle skills.
 - i want each live automation prompt to read its committed operational file directly. i do not want plugin cache paths, copied excerpts, or slash-skill discovery.
 - i keep user-owned configuration, feature maps, routing maps, and secrets outside `.zcode/automations/benny/` so pack refreshes cannot overwrite them.
 - i want both automations to fail closed when channel coordinates, tracker access, the control adapter, or the feature map are missing or uncertain.
@@ -70,7 +70,7 @@ i want verification from a fresh agent rooted in the target repository. confirm 
 
 if workspace-scoped skills are unavailable or any shared dependency does not resolve, stop and explain what failed. do not add `.zcode/automations/benny/skills/` to a skills root or expect its files to appear in the slash-skill list.
 
-tell me that `.zcode/skills/`, `.zcode/automations/benny/`, and any referenced secret-free configuration must be committed before either automation is enabled. do not create or update an automation until i explicitly ask.
+i want verification from a fresh agent rooted in the target repository. confirm that pstack's `why`, `tdd`, `unslop`, and the principle skills used by benny resolve in project scope. do not count skills loaded from the current session or a user-scoped install.
 
 for first-time creation, use the `CronCreate` tool once for triage and once for repro and fix. complete the reviewed creation, schedule check, and `CronList` verification for the first automation before starting the second.
 
