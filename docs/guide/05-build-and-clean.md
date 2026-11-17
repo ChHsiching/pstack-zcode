@@ -56,7 +56,7 @@ In context, that's enough. [`/pstack-tdd`](../../skills/tdd/SKILL.md) writes the
 
 ## Clean before you commit
 
-The [Opening a PR playbook](../../skills/poteto-mode/playbooks/opening-a-pr.md) runs [`/pstack-no-comments`](../../skills/no-comments/SKILL.md) on the diff before review and applies [`/pstack-technical-writing`](../../skills/technical-writing/SKILL.md) then [`/pstack-unslop`](../../skills/unslop/SKILL.md) to the PR title, description, and commit bodies. pstack ships no `/deslop`; ask for the same outcome in plain words: remove narrating comments, unsupported guards, dead compatibility paths, and unrelated edits.
+The [Opening a PR playbook](../../skills/poteto-mode/playbooks/opening-a-pr.md) runs `/deslop` on the diff before each commit, and poteto-mode applies [`/pstack-unslop`](../../skills/unslop/SKILL.md) to the PR description and commit bodies. `/deslop` ships in the the session model plugin, not in pstack. If you don't have it, ask for the same outcome in plain words: remove narrating comments, unsupported guards, dead compatibility paths, and unrelated edits.
 
 For prose, `/pstack-unslop` takes a target and any extra rules you have:
 
